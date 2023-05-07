@@ -28,6 +28,12 @@ class ZoneController extends Controller
     }
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'district' => 'present|array',
+            // 'state_id' => 'required'
+
+        ]);
+        // exit('working');
         $zone=New Zone;
         $zone->state_id = $request->state_id;
         $zone->zone_title = $request->zone_title;

@@ -729,7 +729,7 @@ class AppController extends Controller
     {
         $row_result = DB::table('ecommercebanners')->select('id', 'image')->orderBY('id','ASC')->get();
         $row_result = collect($row_result)->map(function($row) {
-            $row->image = \URL::asset('public/banner_image/'.$row->image);
+            $row->image = \asset('banner_image/'.$row->image);
             return $row;
         });
 
@@ -875,7 +875,7 @@ class AppController extends Controller
                         'merchant_name' => $order_item_result->merchant_name,
                         'size' => $order_item_result->size,
                         'qty' => $order_item_result->qty,
-                        'image' => \URL::asset('public/product_image/'.$product_row->main_image)
+                        'image' => \asset('product_image/'.$product_row->main_image)
                     )
             );
         }
@@ -892,7 +892,7 @@ class AppController extends Controller
 
         foreach($order_item_results as $order_item_result){
             $product_row = DB::table('products')->where('id','=',$order_item_result->product_id)->first();
-            $image = \URL::asset('public/product_image/'.$product_row->main_image);
+            $image = \asset('product_image/'.$product_row->main_image);
 
             $order_items[] = array(
                   'id' => $order_item_result->id,

@@ -1,34 +1,7 @@
-<!DOCTYPE html>
-<html>
-<head>
-	<title>Career || Hindkart</title>
-	<link rel="icon" type="image/x-icon" href="{{  URL::asset('public/assets/images/favicon.png')}}">
-	<meta charset="utf-8">
-	<meta name="viewport" content="width=device-width,initial-scale=1.0">
-	<meta name="description" content="Hindkart Website & Application">
-    <meta name="keywords" content="E-commerce">
-    <meta name="author" content="Hindkart">
-    @include("frontend.include.source")
-</head>
-<body>
-	@include("frontend.include.header")
-	<section class="redirect-page">
-		<div class="container">
-			<div class="row">
-				<div class="col-8">
-					<div class="redirect-content">
-						<h3>Career</h3>
-						<ul class="d-flex">
-							<li><a href="index.php" title="">Home</a></li>
-							<li><i class="fa fa-chevron-right"></i></li>
-							<li>Career</li>
-						</ul>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
-		<section class="contact">
+@extends('layouts.master')
+@section('title', 'Career')
+@section('content')
+<section class="contact">
 	<div class="container">
 		<div class="row">
 			<div class="col-12">
@@ -64,6 +37,6 @@
 		</div>
 	</div>
 </section>
-@include("frontend.include.footer")
-</body>
-</html>
+@endsection
+@section('scripts')
+@endsection

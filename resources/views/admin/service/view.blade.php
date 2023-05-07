@@ -43,7 +43,7 @@
                                     @foreach ($row as $details)
                                         <tr>
                                             <td>{{$loop->iteration }}</td>
-                                            <td><img src="{{ URL::asset('public/service_image/'.$details->image) }}" alt="" style="height: 60px;width: 70px;"></td>
+                                            <td><img src="{{ asset('service_image/'.$details->image) }}" alt="" style="height: 60px;width: 70px;"></td>
                                             <td>{{$details->service}}</td>
                                             <td><a href="{{url('/admin/service/'.$details->id.'/edit')}}"><i data-feather="edit"></i></a></td>
                                             <td><i data-feather="archive" onclick="delete_row({{$details->id}})"></i></td>

@@ -21,6 +21,7 @@ class HomeController extends Controller
     public function about_us()
     {
         return view('frontend.about');
+        // echo "hit";
     }
     public function mission()
     {

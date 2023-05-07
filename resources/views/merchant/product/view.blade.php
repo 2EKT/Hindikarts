@@ -51,7 +51,7 @@
                                         @endphp
                                         <tr>
                                             <td>{{$loop->iteration }}</td>
-                                            <td><img src="{{ URL::asset('public/product_image/'.$details->main_image) }}" alt="" style="height: 60px;width: 70px;"></td>
+                                            <td><img src="{{ asset('product_image/'.$details->main_image) }}" alt="" style="height: 60px;width: 70px;"></td>
                                             <td>{{$cat_row->category}}</td>
                                             <td>{{$subcat_row->subcategory}}</td>
                                             <td>{{$megacat_row->megacategory}}</td>

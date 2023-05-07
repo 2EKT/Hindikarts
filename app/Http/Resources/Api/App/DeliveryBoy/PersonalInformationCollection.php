@@ -24,7 +24,7 @@ class PersonalInformationCollection extends JsonResource
             'city' => !empty($this->city) ? $this->city : '',
             'address' => !empty($this->address) ? $this->address : '',
             'lang' => !empty($this->lang) ? $this->lang : '',
-            'image' => !empty($this->image) ? \URL::asset('public/delivery_boy_image/'.$this->image) : '',
+            'image' => !empty($this->image) ? \asset('delivery_boy_image/'.$this->image) : '',
         ];
     }
 }

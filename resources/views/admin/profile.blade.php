@@ -53,14 +53,14 @@
                                             <input class="form-control" type="text" name="email" placeholder="Email" value="{{ Auth::guard('admin')->user()->email }}" required>
                                         </div>
                                     </div>
+                                    <div class="col-xxl-3 col-md-6">
+                                        {{-- <div class="form-floating"> --}}
+                                            <button type="submit" class="btn btn-success">Update</button>
+                                        {{-- </div> --}}
+                                    </div>
 
                
                                     
-                                    <div class="col-xxl-3 col-md-6">
-                                        <div class="form-floating">
-                                            <button type="submit" class="btn btn-success">Submit</button>
-                                        </div>
-                                    </div>
                                     <!--end col-->
                                 </div>
                             </form>

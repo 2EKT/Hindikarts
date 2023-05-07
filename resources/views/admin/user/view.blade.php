@@ -47,7 +47,7 @@
                                         
                                         <tr>
                                             <td>{{$loop->iteration }}</td>
-                                            <td><img src="{{ URL::asset('public/user_image/'.$details->image) }}" alt="" style="height: 60px;width: 70px;"></td>
+                                            <td><img src="{{ asset('user_image/'.$details->image) }}" alt="" style="height: 60px;width: 70px;"></td>
                                             <td>{{$details->name}}</td>
                                             <td>{{$details->email}}</td>
                                             <td>{{$details->phone}}</td>

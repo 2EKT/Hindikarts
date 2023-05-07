@@ -20,7 +20,7 @@ class ProductColorCollection extends JsonResource
             'merchant_id' => $this->merchant_id,
             'product_id' => $this->product_id,
             'color' => $this->color,
-            'image' => !empty($this->image) ? \URL::asset('public/product_image/'.$this->image) : '',
+            'image' => !empty($this->image) ? \asset('product_image/'.$this->image) : '',
         ];
     }
 }

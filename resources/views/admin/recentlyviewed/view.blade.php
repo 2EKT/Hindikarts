@@ -44,7 +44,7 @@
                                         
                                         <tr>
                                             <td>{{$loop->iteration }}</td>
-                                            <td><img src="{{ URL::asset('public/banner_image/'.$details->image) }}" alt="" style="height: 60px;width: 70px;"></td>
+                                            <td><img src="{{ asset('banner_image/'.$details->image) }}" alt="" style="height: 60px;width: 70px;"></td>
                                             <td>{{$details->link}}</td>
                                             <td><a href="{{url('/admin/recently-viewed/edit/'.$details->id)}}"><i data-feather="edit"></i></a></td>
                                             <td><i data-feather="archive" onclick="delete_row({{$details->id}})"></i></td>

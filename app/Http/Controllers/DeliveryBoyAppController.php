@@ -537,7 +537,7 @@ class DeliveryBoyAppController extends Controller
 
         foreach($order_item_results as $order_item_result){
             $product_row = DB::table('products')->where('id','=',$order_item_result->product_id)->first();
-            $image = \URL::asset('public/product_image/'.$product_row->main_image);
+            $image = \asset('product_image/'.$product_row->main_image);
 
             $order_items[] = array(
                   'id' => $order_item_result->id,

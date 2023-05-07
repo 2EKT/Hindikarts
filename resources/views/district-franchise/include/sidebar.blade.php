@@ -1,15 +1,15 @@
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<div class="app-menu navbar-menu">
+<div class="app-menu navbar-menu" style="background-color:rgb(4,112,170) !important;  opacity: 0.9 !important;" >
     <!-- LOGO -->
-    <div class="navbar-brand-box">
+    <div class="navbar-brand-box " style="background: #fff; ">
       
         <!-- Light Logo-->
         <a href="{{ url('/') }}" class="logo logo-light">
-            <span class="logo-sm" style="background: #fff;padding: 18px 12px;">
-                <img src="{{ URL::asset('public/assets/images/logo.png')}}" alt="" height="45">
-            </span>
-            <span class="logo-lg" style="background: #fff;padding: 18px 12px;">
-                <img src="{{ URL::asset('public/assets/images/logo.png')}}" alt="" height="45">
+            {{-- <span class="logo-sm" style="background: #fff;padding: 18px 12px;">
+                <img src="{{ asset('assets/images/logo.png')}}" alt="" height="45">
+            </span> --}}
+            <span class="logo-lg" >
+                <img src="{{ asset('assets/images/logo.png')}}" alt="" height="45">
             </span>
         </a>
         <button type="button" class="btn btn-sm p-0 fs-20 header-item float-end btn-vertical-sm-hover" id="vertical-hover">

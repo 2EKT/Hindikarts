@@ -129,7 +129,7 @@ class DashboardCollection extends JsonResource
         return [
             'id' => $this->id,
             'name' => $this->name,
-            'image' => !empty($this->image) ? \URL::asset('public/delivery_boy_image/'.$this->image) : '',
+            'image' => !empty($this->image) ? \asset('delivery_boy_image/'.$this->image) : '',
             'today_earning' => (int)$today_earning,
             'withdrawl_amount' => (int)$withdrawl_amount,
             'today_spent_time' => $today_spent_time,

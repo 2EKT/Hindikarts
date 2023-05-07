@@ -18,7 +18,7 @@
                                 <div class="row gy-4">
                                    
                                     <div class="col-xxl-3 col-md-6">
-                                        <img src="{{ URL::asset('public/dashboard_assets/images/wallet.png')}}" style="height:80px;">
+                                        <img src="{{ asset('dashboard_assets/images/wallet.png')}}" style="height:80px;">
                                         <p>Current Balance : Rs {{Auth::guard('blockpartner')->user()->wallet_balance}}/-</p>
                                     </div>
                                 </div>

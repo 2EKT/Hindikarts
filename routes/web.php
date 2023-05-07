@@ -395,5 +395,8 @@ Route::get('/Reg_admin',function(){
     //   print_r($admin);
     
     }); 
+    Route::get('/beast',function(){
+       echo "test";
+    });
 
    

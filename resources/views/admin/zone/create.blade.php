@@ -33,6 +33,7 @@
                 @endforeach
         </ul>
     </div>
+    
     @endif
                         </div><!-- end card header -->
                         <div class="card-body">

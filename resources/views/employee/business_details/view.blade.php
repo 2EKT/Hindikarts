@@ -5,7 +5,7 @@
     $first_day = date('Y-m-01');
 @endphp
 
-<link href="{{ URL::asset('public/dashboard_assets/css/employee_business_details.css')}}" rel="stylesheet" type="text/css" />
+<link href="{{ asset('dashboard_assets/css/employee_business_details.css')}}" rel="stylesheet" type="text/css" />
 
         <!-- Vertical Overlay-->
         <div id="spinner_loader"></div>

@@ -24,7 +24,7 @@ class ProfileCollection extends JsonResource
             'city' => $this->city ?? '',
             'address' => $this->address ?? '',
             'lang' => $this->lang ?? '',
-            'image' => !empty($this->image) ? \URL::asset('public/delivery_boy_image/'.$this->image) : '',
+            'image' => !empty($this->image) ? \asset('delivery_boy_image/'.$this->image) : '',
         ];
     }
 }

@@ -20,9 +20,9 @@ class PersonalDocumentCollection extends JsonResource
             'user_id' => $this->user_id,
             'type ' => $this->type ,
             'card_number ' => $this->card_number ,
-            'image' => !empty($this->image) ? \URL::asset('public/personal_documents_image/'.$this->image) : '',
-            'front_image' => !empty($this->front_image) ? \URL::asset('public/personal_documents_image/'.$this->front_image) : '',
-            'back_image' => !empty($this->back_image) ? \URL::asset('public/personal_documents_image/'.$this->back_image) : '',
+            'image' => !empty($this->image) ? \asset('personal_documents_image/'.$this->image) : '',
+            'front_image' => !empty($this->front_image) ? \asset('personal_documents_image/'.$this->front_image) : '',
+            'back_image' => !empty($this->back_image) ? \asset('personal_documents_image/'.$this->back_image) : '',
         ];
     }
 }
