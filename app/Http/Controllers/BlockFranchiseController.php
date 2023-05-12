@@ -3,11 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\BlockFranchise;
+use App\Models\Blockpartner;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use Illuminate\Support\Facades\Hash;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Mail;
 
 class BlockFranchiseController extends Controller
@@ -28,6 +29,9 @@ class BlockFranchiseController extends Controller
 
     public function login(Request $request)
     {
+        if ( Blockpartner::where('email', $request->email)->exists()) {
+            $Blockpartner =  Blockpartner::where('email', $request->email)->first();
+            if ($Blockpartner->active_status == 'YES') {
         if(Auth::guard('blockpartner')->attempt(['email'=>$request->email,'password'=>$request->password])){
             return redirect('/block-franchise/dashboard');
         }
@@ -35,6 +39,12 @@ class BlockFranchiseController extends Controller
         {
             return redirect('/block-franchise')->withInput()->with('error', 'Invalid Credentials');
         }
+    }else{
+        return redirect('/block-franchise')->withInput()->with('error', 'Your account is not active.');
+    }
+    }else{
+        return redirect('/block-franchise')->withInput()->with('error', 'Account does not Found');
+    }
     }
 
     public function dashboard()

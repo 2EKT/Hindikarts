@@ -46,6 +46,7 @@
                                     @foreach ($row as $details)
                                         @php
                                         $zone_row=DB::table('zones')->where('id','=',$details->zone_id)->first();
+                                        echo $details->zone_id;
                                         @endphp
                                         <tr>
                                             <td>{{$loop->iteration }}</td>

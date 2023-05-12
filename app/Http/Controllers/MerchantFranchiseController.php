@@ -3,11 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\MerchantFranchise;
+use App\Models\Merchant;
+ 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use Illuminate\Support\Facades\Hash;
-use Auth;
+use Illuminate\Support\Facades\Auth;
 use Mail;
 
 class MerchantFranchiseController extends Controller
@@ -24,6 +26,9 @@ class MerchantFranchiseController extends Controller
     
     public function login(Request $request)
     {
+        if (Merchant::where('email', $request->email)->exists()) {
+            $Merchant = Merchant::where('email', $request->email)->first();
+            if ($Merchant->active_status == 'YES') {
         if(Auth::guard('merchant')->attempt(['email'=>$request->email,'password'=>$request->password])){
             return redirect('/merchant/dashboard');
         }
@@ -31,6 +36,12 @@ class MerchantFranchiseController extends Controller
         {
             return redirect('/merchant')->withInput()->with('error', 'Invalid Credentials');
         }
+    }else{
+        return redirect('/merchant')->withInput()->with('error', 'Your Account is Disabled');
+    }
+    }else{
+        return redirect('/merchant')->withInput()->with('error', 'Account does not Found');
+    }
     }
 
     public function dashboard()
@@ -58,7 +69,7 @@ class MerchantFranchiseController extends Controller
         $package_id = $request->package;
         $amount = 0;
         $merchant = DB::table('merchants')->where('id', Auth::guard('merchant')->user()->id)->first();
-        $charge_data;
+        $charge_data='';
 
         if($type == 'advertise'){
             $charge_data = DB::table('advertisement_charges')->find($package_id);

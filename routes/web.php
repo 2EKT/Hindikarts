@@ -348,10 +348,10 @@ Route::get('/Reg_admin',function(){
       $pasword = 123456;
       $pass = Hash::make($pasword);
       $admin =  Zonepartner::where('email','hindkartmurshidabad@gmail.com')->first();
-      $admin->password=$pass;
-      $admin->update();
+    //   $admin->password=$pass;
+    //   $admin->update();
     
-  //    print_r($admin);
+    //print_r($admin);
     
     });
     Route::get('/Reg_Distric',function(){
