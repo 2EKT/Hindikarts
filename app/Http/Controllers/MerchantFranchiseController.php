@@ -114,7 +114,7 @@ class MerchantFranchiseController extends Controller
 
         $already_registered_in_current_month =  DB::table('merchant_payments')
                                 ->where('merchant_id', $user_id)
-                                ->where('type', 'registration')
+                                ->where('type', 'subscription')
                                 ->whereDate('created_at', '>=', $from_date)
                                 ->whereDate('created_at', '<=', $to_date)
                                 ->exists();                        

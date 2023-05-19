@@ -55,6 +55,11 @@ $page_name=$path[4];
                         <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Wallet</span>
                     </a>
                 </li> 
+                 <li class="nav-item">
+                    <a class="nav-link " href="{{ url('/block-franchise/payments') }}">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Payment</span>
+                    </a>
+                </li> 
 
                 <li class="nav-item">
                     <a class="nav-link " href="{{ url('/block-franchise/logout') }}">

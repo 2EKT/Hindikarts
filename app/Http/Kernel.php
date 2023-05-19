@@ -70,5 +70,7 @@ class Kernel extends HttpKernel
         'blockpartner' => \App\Http\Middleware\Blockpartner::class,
         'employee' => \App\Http\Middleware\Employee::class,
         'merchant' => \App\Http\Middleware\Merchant::class,
+        'Clear_Cache'=>\Illuminate\Auth\Middleware\Clear_Cache::class,
+       
     ];
 }

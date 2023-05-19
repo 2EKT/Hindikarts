@@ -1,5 +1,5 @@
-@include("merchant.include.header");
-@include("merchant.include.sidebar");
+@include("zonal-franchise.include.header");
+@include("zonal-franchise.include.sidebar");
 <div class="main-content">
 
     <div class="page-content">
@@ -37,7 +37,7 @@
                         </div><!-- end card header -->
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{ url('/merchant/make_payment') }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ url('/zonal-franchise/make_payment') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                 <div class="row gy-4">
                                     <div class="col-xxl-3 col-md-4">
@@ -46,8 +46,8 @@
                                             <select class="form-control" name="type" id="type" required>
                                                 <option value="">Select Type</option>
                                                 <option value="registration">Registration</option>
-                                                <option value="subscription">Monthly</option>
-                                                <option value="advertise">Advertise</option>
+                                               <option value="Monthly">Monthly</option>
+                                                {{--  <option value="advertise">Advertise</option> --}}
                                             </select>
                                         </div>
                                     </div>
@@ -116,7 +116,7 @@
                 }
 
                 $.ajax({
-                    url:"{{ url('merchant/get_amount') }}",
+                    url:"{{ url('/zonal-franchise/get_amount') }}",
                     type:'post',
                     data: {
                          type: type,
@@ -124,7 +124,8 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success:function(data){
-                        $('#amount').val(data);
+                         $('#amount').val(data);
+                        //alert(data);
                     }
                   });
             }

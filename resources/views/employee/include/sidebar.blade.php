@@ -66,6 +66,11 @@ $page_name=$path[4];
                         <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Merchant Shop</span>
                     </a>
                 </li> 
+                 <li class="nav-item">
+                    <a class="nav-link {{$page_name=='payments'?'active':''}}" href="{{ url('/employee/payments') }}">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Payment</span>
+                    </a>
+                </li> 
                
 
                 <li class="nav-item">

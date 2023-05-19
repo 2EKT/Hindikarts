@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+
 use App\Models\BlockFranchise;
 use App\Models\Blockpartner;
 use Illuminate\Http\Request;
@@ -26,7 +27,103 @@ class BlockFranchiseController extends Controller
     {
         return view('block-franchise.wallet');
     }
+    public function payments()
+    {
+        return view('block-franchise.payment');
+    }
+    public function get_amount(Request $request)
+    {
+        $type = $request->type;
+        // $package_id = $request->package;
+        $amount = 0;
+      //  $blockpartners = DB::table('blockpartners')->where('id', Auth::guard('blockpartner')->user()->id)->first();
+        $charge_data = '';
+if($type=='registration'){
+    // monthlyfees
+   $amount = DB::table('monthlyfees')->first()->block_reg;
 
+//    $amount  = 23;
+}elseif($type=='Monthly'){
+    $amount = DB::table('monthlyfees')->first()->block_monthly;
+}
+        // if ($type == 'advertise') {
+        //     $charge_data = DB::table('advertisement_charges')->find($package_id);
+        //     $amount = !empty($charge_data) ? $charge_data->amount : 0;
+        // } else if ($type == 'registration') {
+        //     $charge_data = DB::table('merchanttypes')->where('id', $merchant->merchant_type_id)->first();
+        //     $amount = !empty($charge_data) ? $charge_data->registration_fee : 0;
+        // } else if ($type == 'subscription') {
+        //     $charge_data = DB::table('merchanttypes')->where('id', $merchant->merchant_type_id)->first();
+        //     $amount = !empty($charge_data) ? $charge_data->monthly_fee : 0;
+        // }
+
+        return $amount;
+    }
+    public function make_payment(Request $request)
+    {
+        // echo "Hit";
+        $type = $request->type;
+        $user_id = Auth::guard('blockpartner')->user()->id;
+        $from_date = date('Y-m-01');
+        $to_date = date('Y-m-d');
+        $amount = $request->amount;
+        $data = [
+            'Block_id' =>  $user_id,
+            'type' => $type,
+            'amount' => $amount,
+            
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+      
+        $already_registered =  DB::table('payments')
+        ->where('Block_id', $user_id)
+        ->where('type', 'registration')
+        ->exists();
+        $already_Monthly_in_current_month =  DB::table('payments')
+        ->where('Block_id', $user_id)
+        ->where('type', 'Monthly')
+        ->whereDate('created_at', '>=', $from_date)
+        ->whereDate('created_at', '<=', $to_date)
+        ->exists();    
+        $already_Monthly =  DB::table('payments')
+        ->where('Block_id', $user_id)
+        ->where('type', 'Monthly')
+        ->whereDate('created_at', '>=', $from_date)
+        ->whereDate('created_at', '<=', $to_date)
+        ->exists();    
+        if(!$already_registered && $type != 'registration'){
+            return redirect('/block-franchise/payments')->with('error', 'Please Send Registration Fee First');
+        }
+        else if($already_registered && $type == 'registration')  {
+            return redirect('/block-franchise/payments')->with('error', 'Already Registered');
+        }  else if($already_Monthly_in_current_month && $type == 'Monthly')  {
+            return redirect('/block-franchise/payments')->with('error', 'Please Subscribe For Next Month');
+        } 
+        
+        else if($already_Monthly && $type == 'Monthly')  {
+            return redirect('/block-franchise/payments')->with('error', 'Already Subscribed');
+        }
+        // DB::table('payments')->where('Block_id',Auth::guard('blockpartner')->user()->id)->first()->type == 'Monthly' &&
+        if($amount > 0){
+           if( DB::table('payments')->where('Block_id',Auth::guard('blockpartner')->user()->id)->exists() && DB::table('payments')->where(['Block_id'=>Auth::guard('blockpartner')->user()->id,'type'=> 'Monthly'])->exists() &&  DB::table('payments')->where(['Block_id'=>Auth::guard('blockpartner')->user()->id ,'type'=>'registration'])->exists() ){
+           $update_Monthly = DB::table('payments')->where(['Block_id'=>Auth::guard('blockpartner')->user()->id , 'type'=>'Monthly' ])->limit(1);
+        //    $update_Monthly->created_at = date('Y-m-d H:i:s');
+        //    $update_Monthly->updated_at = date('Y-m-d H:i:s');
+           $update_Monthly->update(
+            array('created_at'=> date('Y-m-d H:i:s'))
+           );
+           return redirect('/block-franchise/payments')->with('success', 'Payment Successful');
+           }else{
+
+               DB::table('payments')->insert($data);
+               return redirect('/block-franchise/payments')->with('success', 'Payment Successful');
+           }
+        }
+        else{
+            return redirect('/block-franchise/payments')->with('error', 'Something Went Wrong');
+        }
+    }
     public function login(Request $request)
     {
         if ( Blockpartner::where('email', $request->email)->exists()) {

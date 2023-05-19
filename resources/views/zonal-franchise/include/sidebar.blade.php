@@ -65,6 +65,11 @@ $page_name=$path[4];
                     <a class="nav-link {{$page_name=='wallet'?'active':''}}" href="{{ url('/zonal-franchise/wallet') }}">
                         <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Wallet</span>
                     </a>
+                </li>  
+                <li class="nav-item">
+                    <a class="nav-link {{$page_name=='payments'?'active':''}}" href="{{ url('/zonal-franchise/payments') }}">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Payment</span>
+                    </a>
                 </li> 
 
                 <li class="nav-item">

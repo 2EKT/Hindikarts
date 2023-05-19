@@ -1,5 +1,5 @@
-@include("employee.include.header");
-@include("employee.include.sidebar");
+@include("employee.include.header")
+@include("employee.include.sidebar")
 <div class="main-content">
 
     <div class="page-content">

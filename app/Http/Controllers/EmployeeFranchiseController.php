@@ -34,15 +34,15 @@ class EmployeeFranchiseController extends Controller
         // dd($request->all());
         if (Employee::where('email', $request->email)->exists()) {
             $Employee = Employee::where('email', $request->email)->first();
-            if ($Employee ->active_status == 'YES') {
-            if (Auth::guard('employee')->attempt(['email' => $request->email, 'password' => $request->password])) {
-                return redirect('/employee/dashboard');
+            if ($Employee->active_status == 'YES') {
+                if (Auth::guard('employee')->attempt(['email' => $request->email, 'password' => $request->password])) {
+                    return redirect('/employee/dashboard');
+                } else {
+                    return redirect('/employee')->withInput()->with('error', 'Invalid Credentials');
+                }
             } else {
-                return redirect('/employee')->withInput()->with('error', 'Invalid Credentials');
+                return redirect('/employee')->withInput()->with('error', 'Your account is blocked.');
             }
-        }else{
-            return redirect('/employee')->withInput()->with('error', 'Your account is blocked.');
-        }
         } else {
             return redirect('/employee')->withInput()->with('error', 'Account does not Found');
         }
@@ -57,6 +57,104 @@ class EmployeeFranchiseController extends Controller
         return view('employee.profile');
     }
 
+
+    public function payments()
+    {
+        return view('employee.payment');
+    }
+    public function get_amount(Request $request)
+    {
+        $type = $request->type;
+        // $package_id = $request->package;
+        $amount = 0;
+      //  $employees = DB::table('employees')->where('id', Auth::guard('employee')->user()->id)->first();
+        $charge_data = '';
+if($type=='registration'){
+    // monthlyfees
+   $amount = DB::table('monthlyfees')->first()->employee_reg;
+
+//    $amount  = 23;
+}elseif($type=='Monthly'){
+    $amount = DB::table('monthlyfees')->first()->employee_monthly;
+}
+        // if ($type == 'advertise') {
+        //     $charge_data = DB::table('advertisement_charges')->find($package_id);
+        //     $amount = !empty($charge_data) ? $charge_data->amount : 0;
+        // } else if ($type == 'registration') {
+        //     $charge_data = DB::table('merchanttypes')->where('id', $merchant->merchant_type_id)->first();
+        //     $amount = !empty($charge_data) ? $charge_data->registration_fee : 0;
+        // } else if ($type == 'subscription') {
+        //     $charge_data = DB::table('merchanttypes')->where('id', $merchant->merchant_type_id)->first();
+        //     $amount = !empty($charge_data) ? $charge_data->monthly_fee : 0;
+        // }
+
+        return $amount;
+    }
+    public function make_payment(Request $request)
+    {
+        // echo "Hit";
+        $type = $request->type;
+        $user_id = Auth::guard('employee')->user()->id;
+        $from_date = date('Y-m-01');
+        $to_date = date('Y-m-d');
+        $amount = $request->amount;
+        $data = [
+            'employee_id' =>  $user_id,
+            'type' => $type,
+            'amount' => $amount,
+            
+            'created_at' => date('Y-m-d H:i:s'),
+            'updated_at' => date('Y-m-d H:i:s')
+        ];
+      
+        $already_registered =  DB::table('payments')
+        ->where('employee_id', $user_id)
+        ->where('type', 'registration')
+        ->exists();
+        $already_Monthly_in_current_month =  DB::table('payments')
+        ->where('employee_id', $user_id)
+        ->where('type', 'Monthly')
+        ->whereDate('created_at', '>=', $from_date)
+        ->whereDate('created_at', '<=', $to_date)
+        ->exists();    
+        $already_Monthly =  DB::table('payments')
+        ->where('employee_id', $user_id)
+        ->where('type', 'Monthly')
+        ->whereDate('created_at', '>=', $from_date)
+        ->whereDate('created_at', '<=', $to_date)
+        ->exists();    
+        if(!$already_registered && $type != 'registration'){
+            return redirect('/employee/payments')->with('error', 'Please Send Registration Fee First');
+        }
+        else if($already_registered && $type == 'registration')  {
+            return redirect('/employee/payments')->with('error', 'Already Registered');
+        }  else if($already_Monthly_in_current_month && $type == 'Monthly')  {
+            return redirect('/employee/payments')->with('error', 'Please Subscribe For Next Month');
+        } 
+        
+        else if($already_Monthly && $type == 'Monthly')  {
+            return redirect('/employee/payments')->with('error', 'Already Subscribed');
+        }
+        // DB::table('payments')->where('employee_id',Auth::guard('employee')->user()->id)->first()->type == 'Monthly' &&
+        if($amount > 0){
+           if( DB::table('payments')->where('employee_id',Auth::guard('employee')->user()->id)->exists() && DB::table('payments')->where(['employee_id'=>Auth::guard('employee')->user()->id,'type'=> 'Monthly'])->exists() &&  DB::table('payments')->where(['employee_id'=>Auth::guard('employee')->user()->id ,'type'=>'registration'])->exists() ){
+           $update_Monthly = DB::table('payments')->where(['employee_id'=>Auth::guard('employee')->user()->id , 'type'=>'Monthly' ])->limit(1);
+        //    $update_Monthly->created_at = date('Y-m-d H:i:s');
+        //    $update_Monthly->updated_at = date('Y-m-d H:i:s');
+           $update_Monthly->update(
+            array('created_at'=> date('Y-m-d H:i:s'))
+           );
+           return redirect('/employee/payments')->with('success', 'Payment Successful');
+           }else{
+
+               DB::table('payments')->insert($data);
+               return redirect('/employee/payments')->with('success', 'Payment Successful');
+           }
+        }
+        else{
+            return redirect('/employee/payments')->with('error', 'Something Went Wrong');
+        }
+    }
     public function update_profile(Request $request)
     {
         $result = array(
