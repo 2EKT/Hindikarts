@@ -20,7 +20,7 @@
 
     <link rel="stylesheet" href="{{ asset('dashboard_assets/cdn.datatables.net/buttons/2.2.2/css/buttons.dataTables.min.css') }}">
 
-
+  
     <!-- Layout config Js -->
     <script src="{{ asset('dashboard_assets/js/layout.js')}}"></script>
     <script src="{{ asset('dashboard_assets/js/sweetalert.min.js')}}"></script>

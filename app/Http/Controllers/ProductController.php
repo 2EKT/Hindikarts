@@ -4,11 +4,15 @@ namespace App\Http\Controllers;
 
 use App\Models\Product;
 use App\Models\ProductDetails;
-use App\Models\ProductColor;
+use App\Models\{ProductColor,
+    MerchantPayment
+};
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File; 
 use Illuminate\Support\Facades\Hash;
+use DateTime;
 use Auth;
 use Mail;
 
@@ -20,13 +24,150 @@ class ProductController extends Controller
     }
     public function index()
     {
-        return view('merchant.product.view');
+         
+        //  $today = Carbon::now();
+        
+
+    //   $from_date = date('2023-07-01');
+    //  $to_date = date('2023-07-24');
+     $from_date = date('Y-m-01');
+     $to_date = date('Y-m-d');
+       
+        // $Mothly =  DB::table('merchant_payments')
+        //              ->where('merchant_id', 1)
+        //              ->where('type', 'registration')
+        //              ->whereDate('created_at', '>=', $from_date)
+        //              ->whereDate('created_at', '<=', $to_date)
+        //              ->exists();  
+        //             //  echo "$today  <br> " .   $Mothly ."<br>";
+
+        //              if($Mothly ){
+        //                  echo "<br>today is greater";
+        //              }else{
+        //                 echo "<br>Mothly is greater";
+        //              }
+        //  exit();
+             $user_id=  Auth::guard('merchant')->user()->id;
+             if ( MerchantPayment::where('merchant_id' ,$user_id)->exists()) {
+                 try {
+                     if(MerchantPayment::where(['merchant_id'=> $user_id , 'type' => 'subscription'])->exists()){
+
+                    
+                     $Mothly =  DB::table('merchant_payments')
+                     ->where('merchant_id', $user_id)
+                     ->where('type', 'subscription')
+                     ->whereDate('created_at', '>=', $from_date)
+                     ->whereDate('created_at', '<=', $to_date)
+                     ->exists();  
+                     if($Mothly)  {
+                          return view('merchant.product.view');
+                         
+                     } else{
+                         return redirect('/merchant/payments')->with('error', 'Your Monthly Fee Expire');
+                        
+                     }
+                    }else{
+                        $Reg =  DB::table('merchant_payments')
+                        ->where('merchant_id', $user_id)
+                        ->where('type', 'registration')
+                        ->whereDate('created_at', '>=', $from_date)
+                        ->whereDate('created_at', '<=', $to_date)
+                        ->exists();
+                        if($Reg){
+                            return view('merchant.product.view');
+                        }else{
+                            return redirect('/merchant/payments')->with('error', 'Please Submit the Monthly Fee');
+                        }
+                    }
+
+                 } catch (\Throwable $th) {
+               return back()->with('error','Some Thing went Worng');
+                    //  $Reg =  DB::table('merchant_payments')
+                    //  ->where('merchant_id', $user_id)
+                    //  ->where('type', 'registration')
+                    //  ->whereDate('created_at', '>=', $from_date)
+                    //  ->whereDate('created_at', '<=', $to_date)
+                    //  ->exists();  
+                
+                    //  if($Reg)  {
+                          
+                    //       return redirect('/merchant/payments')->with('error', 'Please Submit the Monthly Fee');
+                         
+                    //  } else{
+                    //     return view('merchant.product.view');
+                    //  }
+                 }
+                
+         }else{
+              return redirect('merchant/payments')->with('error','Please Pay  Register Fee First');
+         }
+       
     }
 
    
     public function create()
+    
     {
-        return view('merchant.product.create');
+    //       $from_date = date('2023-07-01');
+    //  $to_date = date('2023-07-24');
+     $from_date = date('Y-m-01');
+     $to_date = date('Y-m-d');
+        $user_id=  Auth::guard('merchant')->user()->id;
+        if ( MerchantPayment::where('merchant_id' ,$user_id)->exists()) {
+            try {
+                if(MerchantPayment::where(['merchant_id'=> $user_id , 'type' => 'subscription'])->exists()){
+                    
+                    
+                    $Mothly =  DB::table('merchant_payments')
+                    ->where('merchant_id', $user_id)
+                    ->where('type', 'subscription')
+                    ->whereDate('created_at', '>=', $from_date)
+                    ->whereDate('created_at', '<=', $to_date)
+                    ->exists();  
+                    if($Mothly)  {
+                        
+                        return view('merchant.product.create');
+                        
+                    } else{
+                        return redirect('/merchant/payments')->with('error', 'Your Monthly Fee Expire');
+                        
+                    }
+                }else{
+                    $Reg =  DB::table('merchant_payments')
+                    ->where('merchant_id', $user_id)
+                    ->where('type', 'registration')
+                    ->whereDate('created_at', '>=', $from_date)
+                    ->whereDate('created_at', '<=', $to_date)
+                    ->exists();
+                    if($Reg){
+                        return view('merchant.product.create');
+                     
+                    }else{
+                        return redirect('/merchant/payments')->with('error', 'Please Submit the Monthly Fee');
+                       }
+                   }
+
+                } catch (\Throwable $th) {
+              return back()->with('error','Some Thing went Worng');
+                   //  $Reg =  DB::table('merchant_payments')
+                   //  ->where('merchant_id', $user_id)
+                   //  ->where('type', 'registration')
+                   //  ->whereDate('created_at', '>=', $from_date)
+                   //  ->whereDate('created_at', '<=', $to_date)
+                   //  ->exists();  
+               
+                   //  if($Reg)  {
+                         
+                   //       return redirect('/merchant/payments')->with('error', 'Please Submit the Monthly Fee');
+                        
+                   //  } else{
+                   //     return view('merchant.product.view');
+                   //  }
+                }
+         }else{
+              return redirect('merchant/payments')->with('error','Please Pay  Registration Fee First');
+         }
+        
     }
 
     public function get_subcategory(Request $request)

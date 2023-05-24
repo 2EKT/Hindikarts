@@ -48,6 +48,12 @@ $page_name=$path[4];
                     <a class="nav-link " href="{{ url('/block-franchise/merchant') }}">
                         <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Merchant List</span>
                     </a>
+                </li>  
+                
+                <li class="nav-item">
+                    <a class="nav-link {{$page_name=='business-details'?'active':''}}" href="{{ url('/block-franchise/business-details') }}">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Business Details</span>
+                    </a>
                 </li> 
                 
                 <li class="nav-item">

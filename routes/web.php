@@ -191,18 +191,18 @@ Route::group(['middleware'=>'zonepartner'],function(){
     Route::get('/zonal-franchise/change-password',[ZonalFranchiseController::class,'change_password']);
     Route::post('/zonal-franchise/update_password',[ZonalFranchiseController::class,'update_password']);
     Route::get('/zonal-franchise/logout',[ZonalFranchiseController::class,'logout']);
-
+    Route::get('/zonal-franchise/business-details',[ZonalFranchiseController::class,'business_details']);
+    
     Route::get('/zonal-franchise/district-partner',[ZonalFranchiseController::class,'view_districtpartner']);
     Route::get('/zonal-franchise/districtpartner/create',[ZonalFranchiseController::class,'create_districtpartner']);
     Route::post('/zonal-franchise/districtpartner/store',[ZonalFranchiseController::class,'store_districtpartner']);
     Route::get('/zonal-franchise/districtpartner/edit/{id}', [ZonalFranchiseController::class, 'edit_districtpartner']);
     Route::post('/zonal-franchise/districtpartner/update', [ZonalFranchiseController::class, 'update_districtpartner']);
     Route::post('/zonal-franchise/districtpartner/delete', [ZonalFranchiseController::class, 'destroy_districtpartner']);
-    
     Route::get('/zonal-franchise/payments', [ZonalFranchiseController::class,'payments']);
     Route::post('/zonal-franchise/make_payment', [ZonalFranchiseController::class,'make_payment']);
     Route::post('/zonal-franchise/get_amount', [ZonalFranchiseController::class,'get_amount']);
-
+    Route::get('/check/payments/zonal', [ZonalFranchiseController::class,'check']);
     Route::get('/zonal-franchise/block-partner',[ZonalFranchiseController::class,'view_blockpartner']);
     Route::get('/zonal-franchise/employee',[ZonalFranchiseController::class,'view_employee']);
     Route::get('/zonal-franchise/merchant',[ZonalFranchiseController::class,'view_merchant']);
@@ -234,11 +234,11 @@ Route::group(['middleware'=>'districtpartner'],function(){
     Route::get('/district-franchise/blockpartner/edit/{id}', [DistrictFranchiseController::class, 'edit_blockpartner']);
     Route::post('/district-franchise/blockpartner/update', [DistrictFranchiseController::class, 'update_blockpartner']);
     Route::post('/district-franchise/blockpartner/delete', [DistrictFranchiseController::class, 'destroy_blockpartner']);
-
+    Route::get('/district-franchise/business-details',[DistrictFranchiseController::class,'business_details']);
     Route::get('/district-franchise/payments', [DistrictFranchiseController::class,'payments']);
     Route::post('/district-franchise/make_payment', [DistrictFranchiseController::class,'make_payment']);
     Route::post('/district-franchise/get_amount', [DistrictFranchiseController::class,'get_amount']);
-
+    Route::get('/check/payments/district', [DistrictFranchiseController::class,'check']);
     Route::get('/district-franchise/employee',[DistrictFranchiseController::class,'view_employee']);
     Route::get('/district-franchise/merchant',[DistrictFranchiseController::class,'view_merchant']);
     
@@ -261,7 +261,7 @@ Route::group(['middleware'=>'blockpartner'],function(){
     Route::get('/block-franchise/change-password',[BlockFranchiseController::class,'change_password']);
     Route::post('/block-franchise/update_password',[BlockFranchiseController::class,'update_password']);
     Route::get('/block-franchise/logout',[BlockFranchiseController::class,'logout']);
-
+    Route::get('/block-franchise/business-details',[BlockFranchiseController::class,'business_details']);
     Route::get('/block-franchise/employee',[BlockFranchiseController::class,'view_employee']);
     Route::get('/block-franchise/employee/create',[BlockFranchiseController::class,'create_employee']);
     Route::post('/block-franchise/employee/store',[BlockFranchiseController::class,'store_employee']);
@@ -272,7 +272,7 @@ Route::group(['middleware'=>'blockpartner'],function(){
     Route::get('/block-franchise/payments', [BlockFranchiseController::class,'payments']);
     Route::post('/block-franchise/make_payment', [BlockFranchiseController::class,'make_payment']);
     Route::post('/block-franchise/get_amount', [BlockFranchiseController::class,'get_amount']);
-
+    Route::get('/check/payments/block', [BlockFranchiseController::class,'check']);
     Route::get('/block-franchise/merchant',[BlockFranchiseController::class,'view_merchant']);
     
     Route::get('/block-franchise/wallet', [BlockFranchiseController::class,'wallet']);
@@ -302,7 +302,7 @@ Route::group(['middleware'=>'employee'],function(){
     Route::get('/employee/merchant/edit/{id}', [EmployeeFranchiseController::class, 'edit_merchant']);
     Route::post('/employee/merchant/update', [EmployeeFranchiseController::class, 'update_merchant']);
     Route::post('/employee/merchant/delete', [EmployeeFranchiseController::class, 'destroy_merchant']);
-
+    Route::get('/check/payments/employee', [EmployeeFranchiseController::class,'check']);
     Route::get('/employee/wallet', [EmployeeFranchiseController::class,'wallet']);
     Route::post('/employee/generate-report',[EmployeeFranchiseController::class,'generateBusinessReport']);
 
@@ -342,7 +342,7 @@ Route::group(['middleware'=>'merchant'],function(){
     Route::post('/merchant/get_amount', [MerchantFranchiseController::class,'get_amount']);
     Route::get('/merchant/payments', [MerchantFranchiseController::class,'payment']);
     Route::post('/merchant/make_payment', [MerchantFranchiseController::class,'make_payment']);
-
+    Route::get('/check/payments', [MerchantFranchiseController::class,'check']);
     Route::get('/merchant/new-orders', [MerchantOrderController::class,'index']);
     Route::get('/merchant/accepted-orders', [MerchantOrderController::class,'acceptedOrders']);
     Route::get('/merchant/completed-orders', [MerchantOrderController::class,'completedOrders']);

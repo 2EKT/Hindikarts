@@ -92,7 +92,7 @@
 <!-- container-fluid -->
 </div>
 <!-- End Page-content -->
-@include("merchant.include.footer");
+@include("zonal-franchise.include.footer");
 
 <script>
     $("#type").on('change',function(){

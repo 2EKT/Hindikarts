@@ -42,7 +42,9 @@
                         <div class="col-xxl-12">
                             <div class="d-flex flex-column h-100">
                                <p style="font-size: 18px;color: brown;">Hello , <b> {{ Auth::guard('zonepartner')->user()->name }}</b> </p>
-
+                               <div id="test">
+                            
+                            </div>
                                 <div class="row">
 
                                     <div class="col-md-3">
@@ -613,6 +615,38 @@
 
 
 @include("zonal-franchise.include.footer");
+<script>
+    $.ajax({
+        type: "Get",
+        url: "/check/payments/zonal",
+        success: function (response) {
+        // $('#pro').val(response.error);
+       let errr= String(response.error);
+        if (errr != 'undefined') {
+            
+     
+        $("#test").append(`\
+        <div class="alert alert-warning alert-dismissible alert-solid alert-label-icon fade show" role="alert">\
+                                    <i class="ri-alert-line label-icon"></i><strong>Error</strong> ${response.error}\
+                                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>\
+                                </div> \
+        `);
+    }
+        // let   fcookie='mycookie';
+        // var date = new Date();
+// date.setTime(date.getTime() + (30 * 1000));
+// $.cookie('fcookie', response.error, { expires: date }); 
+    //document.cookie=fcookie+"=" + response.error ;
+    //document.cookie="expires=" + date ;
+    // document.cookie=fcookie+"=" + 'undefined' ;
+    // setTimeout(function(){
+    //     document.cookie=fcookie+"=" + 'undefined' ;
+    // }, 1000);
+    console.log(response.error)
+   
+        }
+    });
+</script>
 <script>
     function delete_row(id)
     {

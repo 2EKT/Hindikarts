@@ -60,7 +60,12 @@ $page_name=$path[4];
                         <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Merchant List</span>
                     </a>
                 </li> 
-                
+            
+                <li class="nav-item">
+                    <a class="nav-link {{$page_name=='business-details'?'active':''}}" href="{{ url('/zonal-franchise/business-details') }}">
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Business Details</span>
+                    </a>
+                </li> 
                 <li class="nav-item">
                     <a class="nav-link {{$page_name=='wallet'?'active':''}}" href="{{ url('/zonal-franchise/wallet') }}">
                         <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Wallet</span>

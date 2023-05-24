@@ -4,13 +4,14 @@ namespace App\Http\Controllers;
 
 
 use App\Models\ZonalFranchise;
-use App\Models\Zonepartner;
+use App\Models\{Zonepartner, Payments};
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\File;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
 use Mail;
+
 
 class ZonalFranchiseController extends Controller
 {
@@ -22,6 +23,10 @@ class ZonalFranchiseController extends Controller
     {
         return view('zonal-franchise.index');
     }
+    public function business_details()
+    {
+        return view('zonal-franchise.business_details.view');
+    }
 
     public function wallet()
     {
@@ -31,21 +36,68 @@ class ZonalFranchiseController extends Controller
     {
         return view('zonal-franchise.payment');
     }
+    public function check()
+    {
+        //$today = Carbon::now();
+        //   $from_date = date('2023-07-01');
+        //            $to_date = date('2023-07-24');
+        $from_date = date('Y-m-01');
+        $to_date = date('Y-m-d');
+
+        $user_id =  Auth::guard('zonepartner')->user()->id;
+        if (Payments::where('Zonal_id', $user_id)->exists()) {
+            try {
+                if (Payments::where(['Zonal_id' => $user_id, 'type' => 'Monthly'])->exists()) {
+
+
+                    $Mothly =  DB::table('payments')
+                        ->where('Zonal_id', $user_id)
+                        ->where('type', 'Monthly')
+                        ->whereDate('created_at', '>=', $from_date)
+                        ->whereDate('created_at', '<=', $to_date)
+                        ->exists();
+                    if ($Mothly) {
+                        return     response()->json(['oky' => 'oky']);
+                    } else {
+                        return   response()->json(['error' => 'Your Monthly Fee Expire']);
+                    }
+                } else {
+                    $Reg =  DB::table('payments')
+                        ->where('Zonal_id', $user_id)
+                        ->where('type', 'registration')
+                        ->whereDate('created_at', '>=', $from_date)
+                        ->whereDate('created_at', '<=', $to_date)
+                        ->exists();
+                    if ($Reg) {
+                        return   response()->json(['oky' => 'oky']);
+                    } else {
+
+                        return response()->json(['error' => 'Please Submit the Monthly Fee']);
+                    }
+                }
+            } catch (\Throwable $th) {
+
+                return   response()->json(['error' => 'Some Thing went Worng']);
+            }
+        } else {
+            return response()->json(['error' => 'Please Pay  Register Fee First']);
+        }
+    }
     public function get_amount(Request $request)
     {
         $type = $request->type;
         // $package_id = $request->package;
         $amount = 0;
-      //  $employees = DB::table('employees')->where('id', Auth::guard('employee')->user()->id)->first();
+        //  $employees = DB::table('employees')->where('id', Auth::guard('employee')->user()->id)->first();
         $charge_data = '';
-if($type=='registration'){
-    // monthlyfees
-   $amount = DB::table('monthlyfees')->first()->zone_reg;
+        if ($type == 'registration') {
+            // monthlyfees
+            $amount = DB::table('monthlyfees')->first()->zone_reg;
 
-//    $amount  = 23;
-}elseif($type=='Monthly'){
-    $amount = DB::table('monthlyfees')->first()->zone_monthly;
-}
+            //    $amount  = 23;
+        } elseif ($type == 'Monthly') {
+            $amount = DB::table('monthlyfees')->first()->zone_monthly;
+        }
         // if ($type == 'advertise') {
         //     $charge_data = DB::table('advertisement_charges')->find($package_id);
         //     $amount = !empty($charge_data) ? $charge_data->amount : 0;
@@ -71,56 +123,72 @@ if($type=='registration'){
             'Zonal_id' =>  $user_id,
             'type' => $type,
             'amount' => $amount,
-            
+
             'created_at' => date('Y-m-d H:i:s'),
             'updated_at' => date('Y-m-d H:i:s')
         ];
-      
+
         $already_registered =  DB::table('payments')
-        ->where('Zonal_id', $user_id)
-        ->where('type', 'registration')
-        ->exists();
+            ->where('Zonal_id', $user_id)
+            ->where('type', 'registration')
+            ->exists();
         $already_Monthly_in_current_month = DB::table('payments')
-        ->where('Zonal_id', $user_id)
-        ->where('type', 'Monthly')
-        ->whereDate('created_at', '>=', $from_date)
-        ->whereDate('created_at', '<=', $to_date)
-        ->exists();    
+            ->where('Zonal_id', $user_id)
+            ->where('type', 'Monthly')
+            ->whereDate('created_at', '>=', $from_date)
+            ->whereDate('created_at', '<=', $to_date)
+            ->exists();
         $already_Monthly =  DB::table('payments')
-        ->where('Zonal_id', $user_id)
-        ->where('type', 'Monthly')
-        ->whereDate('created_at', '>=', $from_date)
-        ->whereDate('created_at', '<=', $to_date)
-        ->exists();    
-        if(!$already_registered && $type != 'registration'){
+            ->where('Zonal_id', $user_id)
+            ->where('type', 'Monthly')
+            ->whereDate('created_at', '>=', $from_date)
+            ->whereDate('created_at', '<=', $to_date)
+            ->exists();
+        if (!$already_registered && $type != 'registration') {
             return redirect('/zonal-franchise/payments')->with('error', 'Please Send Registration Fee First');
-        }
-        else if($already_registered && $type == 'registration')  {
+        } else if ($already_registered && $type == 'registration') {
             return redirect('/zonal-franchise/payments')->with('error', 'Already Registered');
-        }  else if($already_Monthly_in_current_month && $type == 'Monthly')  {
+        } else if ($already_Monthly_in_current_month && $type == 'Monthly') {
             return redirect('/zonal-franchise/payments')->with('error', 'Please Subscribe For Next Month');
-        } 
-        
-        else if($already_Monthly && $type == 'Monthly')  {
+        } else if ($already_Monthly && $type == 'Monthly') {
             return redirect('/zonal-franchise/payments')->with('error', 'Already Subscribed');
         }
         // DB::table('payments')->where('Zonal_id',Auth::guard('zonepartner')->user()->id)->first()->type == 'Monthly' &&
-        if($amount > 0){
-           if( DB::table('payments')->where('Zonal_id',Auth::guard('zonepartner')->user()->id)->exists() && DB::table('payments')->where(['Zonal_id'=>Auth::guard('zonepartner')->user()->id,'type'=> 'Monthly'])->exists() &&  DB::table('payments')->where(['Zonal_id'=>Auth::guard('zonepartner')->user()->id ,'type'=>'registration'])->exists() ){
-           $update_Monthly = DB::table('payments')->where(['Zonal_id'=>Auth::guard('zonepartner')->user()->id , 'type'=>'Monthly' ])->limit(1);
-        //    $update_Monthly->created_at = date('Y-m-d H:i:s');
-        //    $update_Monthly->updated_at = date('Y-m-d H:i:s');
-           $update_Monthly->update(
-            array('created_at'=> date('Y-m-d H:i:s'))
-           );
-           return redirect('/zonal-franchise/payments')->with('success', 'Payment Successful');
-           }else{
+        if ($amount > 0) {
+            if (DB::table('payments')->where('Zonal_id', Auth::guard('zonepartner')->user()->id)->exists() && DB::table('payments')->where(['Zonal_id' => Auth::guard('zonepartner')->user()->id, 'type' => 'Monthly'])->exists() &&  DB::table('payments')->where(['Zonal_id' => Auth::guard('zonepartner')->user()->id, 'type' => 'registration'])->exists()) {
+                $update_Monthly = DB::table('payments')->where(['Zonal_id' => Auth::guard('zonepartner')->user()->id, 'type' => 'Monthly'])->limit(1);
+                //    $update_Monthly->created_at = date('Y-m-d H:i:s');
+                //    $update_Monthly->updated_at = date('Y-m-d H:i:s');
+                $wallet =   Auth::guard('zonepartner')->user()->wallet_balance;
+                if ($wallet > 0  && $wallet >= $amount) {
+                    $wallet = $wallet - $amount;
 
-               DB::table('payments')->insert($data);
-               return redirect('/zonal-franchise/payments')->with('success', 'Payment Successful');
-           }
-        }
-        else{
+                    $bal = Zonepartner::where('id', Auth::guard('zonepartner')->user()->id)->first();
+                    $bal->wallet_balance = $wallet;
+                    $bal->update();
+                    $update_Monthly->update(
+                        array('created_at' => date('Y-m-d H:i:s'))
+                    );
+                    return redirect('/zonal-franchise/payments')->with('success', 'Payment Successful');
+                } else {
+                    return redirect('/zonal-franchise/payments')->with('error', 'Insufficient Balance');
+                }
+            } else {
+                $wallet =   Auth::guard('zonepartner')->user()->wallet_balance;
+                if ($wallet > 0  && $wallet >= $amount) {
+                    $wallet = $wallet - $amount;
+
+                    $bal = Zonepartner::where('id', Auth::guard('zonepartner')->user()->id)->first();
+                    $bal->wallet_balance = $wallet;
+                    $bal->update();
+
+                    DB::table('payments')->insert($data);
+                    return redirect('/zonal-franchise/payments')->with('success', 'Payment Successful');
+                } else {
+                    return redirect('/zonal-franchise/payments')->with('error', 'Insufficient Balance');
+                }
+            }
+        } else {
             return redirect('/zonal-franchise/payments')->with('error', 'Something Went Wrong');
         }
     }
@@ -129,7 +197,7 @@ if($type=='registration'){
         if (Zonepartner::where('email', $request->email)->exists()) {
 
 
-            $Zonepartner=  Zonepartner::where('email', $request->email)->first();
+            $Zonepartner =  Zonepartner::where('email', $request->email)->first();
             if ($Zonepartner->active_status == 'YES') {
 
 
@@ -139,12 +207,10 @@ if($type=='registration'){
                 } else {
                     return redirect('/zonal-franchise')->withInput()->with('error', 'Invalid Credentials');
                 }
-
             } else {
                 return redirect('/zonal-franchise')->withInput()->with('error', 'Your Account is Blocked');
             }
-        }
-        else{
+        } else {
             return redirect('/zonal-franchise')->withInput()->with('error', 'Account does not Found');
         }
     }
@@ -206,8 +272,62 @@ if($type=='registration'){
         return view('zonal-franchise.districtpartner.view');
     }
     public function create_districtpartner()
+
     {
-        return view('zonal-franchise.districtpartner.create');
+        $user_id = Auth::guard('zonepartner')->user()->id;
+        //       $from_date = date('2023-06-01');
+        //  $to_date = date('2023-06-24');
+        $from_date = date('Y-m-01');
+        $to_date = date('Y-m-d');
+        if (Payments::where('Zonal_id', $user_id)->exists()) {
+            try {
+                if (Payments::where(['Zonal_id' => $user_id, 'type' => 'Monthly'])->exists()) {
+
+
+                    $Mothly =  DB::table('payments')
+                        ->where('Zonal_id', $user_id)
+                        ->where('type', 'Monthly')
+                        ->whereDate('created_at', '>=', $from_date)
+                        ->whereDate('created_at', '<=', $to_date)
+                        ->exists();
+                    if ($Mothly) {
+                        return view('zonal-franchise.districtpartner.create');
+                    } else {
+                        return redirect('/zonal-franchise/payments')->with('error', 'Your Monthly Fee Expire');
+                    }
+                } else {
+                    $Reg =  DB::table('payments')
+                        ->where('Zonal_id', $user_id)
+                        ->where('type', 'registration')
+                        ->whereDate('created_at', '>=', $from_date)
+                        ->whereDate('created_at', '<=', $to_date)
+                        ->exists();
+                    if ($Reg) {
+                        return view('zonal-franchise.districtpartner.create');
+                    } else {
+                        return redirect('/zonal-franchise/payments')->with('error', 'Please Submit the Monthly Fee');
+                    }
+                }
+            } catch (\Throwable $th) {
+                return back()->with('error', 'Some Thing went Worng');
+                //  $Reg =  DB::table('merchant_payments')
+                //  ->where('Zonal_id', $user_id)
+                //  ->where('type', 'registration')
+                //  ->whereDate('created_at', '>=', $from_date)
+                //  ->whereDate('created_at', '<=', $to_date)
+                //  ->exists();  
+
+                //  if($Reg)  {
+
+                //       return redirect('/merchant/payments')->with('error', 'Please Submit the Monthly Fee');
+
+                //  } else{
+                //     return view('merchant.product.view');
+                //  }
+            }
+        } else {
+            return redirect('/zonal-franchise/payments')->with('error', 'Please Pay  Register Fee First');
+        }
     }
 
     public function store_districtpartner(Request $request)
