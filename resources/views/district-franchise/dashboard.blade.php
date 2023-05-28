@@ -599,7 +599,7 @@
 <script>
     $.ajax({
         type: "Get",
-        url: "/check/payments/district",
+        url: "{{url('/check/payments/district')}}",
         success: function (response) {
         // $('#pro').val(response.error);
        let errr= String(response.error);

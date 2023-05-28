@@ -6,7 +6,16 @@ use App\Models\Admin;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Auth;
-use DB;
+use Illuminate\Support\Facades\DB;
+// sdasda
+// SdA
+// dSA
+// D
+// AD
+// AD
+// ADad
+// sdA
+
 use Mail;
 use Session;
 use App\Mail\DemoMail;

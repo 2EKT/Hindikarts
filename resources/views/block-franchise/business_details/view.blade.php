@@ -37,7 +37,7 @@
                                       <h1 class="text-center">Business Collection</h1>
                                     </div>
                                     <div class="col-md-4" style="text-align: right;">
-                                      <button type="button" id="employee_report_btn" class="btn btn-primary">Submit</button>
+                                      <button type="button" id="Block_report_btn" class="btn btn-primary">Submit</button>
                                     </div>
                                 </div>
                               </div>
@@ -53,7 +53,7 @@
                                     <th scope="col">NET COLLECTIONS</th>
                                 </tr>
                               </thead>
-                              <tbody id="employee_business_collection">
+                              <tbody id="Block_business_collection">
                               </tbody>
                         </table>
                      </div>   
@@ -154,13 +154,13 @@
        
 
 
-@include("employee.include.footer");
+                @include("block-franchise.include.footer");
 <script>
       $(document).ready(function(e){
         generateReport();
       });
 
-      $("#employee_report_btn").on('click',function(){
+      $("#Block_report_btn").on('click',function(){
          generateReport();
       });
 
@@ -170,7 +170,7 @@
            let from_date = $('#from_date').val();
            let to_date = $('#to_date').val();
                 $.ajax({
-                    url:"{{ url('employee/generate-report') }}",
+                    url:"{{ url('block/generate-report') }}",
                     type:'POST',
                     data:{
                       _token: "{{ csrf_token() }}",
@@ -188,7 +188,7 @@
                         let row = '';
                         let total_row = '';
 
-                        $('#employee_business_collection').empty();
+                        $('#Block_business_collection').empty();
                        
                         if(merchants.length > 0){
                           merchants.forEach((item, index) => {
@@ -217,7 +217,7 @@
                                        '<td>' + total_estimation.total_net_collection_by_merchants + '</td>' + 
                                        '</tr>'; 
                           
-                            $('#employee_business_collection').append(total_row);
+                            $('#Block_business_collection').append(total_row);
                             $("#total_collection_by_merchants").text(total_estimation.total_collection_by_merchants);
                             $("#total_subscription_collection_by_merchants").text(total_estimation.total_subscription_collection_by_merchants);
                             $("#total_advertise_collection_by_merchants").text(total_estimation.total_advertise_collection_by_merchants);

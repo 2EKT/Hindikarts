@@ -1,101 +1,116 @@
-@include("block-franchise.include.header");
-@include("block-franchise.include.sidebar");
+@include('block-franchise.include.header');
+@include('block-franchise.include.sidebar');
 @php
-    $total_employee=DB::table('employees')->where('block_partner_id','=',Auth::guard('blockpartner')->user()->id)->count();
-    $total_merchant=DB::table('merchants')->where('block_partner_id','=',Auth::guard('blockpartner')->user()->id)->count();
-    $total_user=1;
-   
+    $total_employee = DB::table('employees')
+        ->where('block_partner_id', '=', Auth::guard('blockpartner')->user()->id)
+        ->count();
+    $total_merchant = DB::table('merchants')
+        ->where('block_partner_id', '=', Auth::guard('blockpartner')->user()->id)
+        ->count();
+    $total_user = 1;
+    
 @endphp
 
-        <!-- Vertical Overlay-->
-        <div class="vertical-overlay"></div>
+<!-- Vertical Overlay-->
+<div class="vertical-overlay"></div>
 
-        <!-- ============================================================== -->
-        <!-- Start right Content here -->
-        <!-- ============================================================== -->
-        <div class="main-content">
+<!-- ============================================================== -->
+<!-- Start right Content here -->
+<!-- ============================================================== -->
+<div class="main-content">
 
-            <div class="page-content">
-                <div class="container-fluid">
+    <div class="page-content">
+        <div class="container-fluid">
 
-                    <!-- start page title -->
-                    <div class="row">
-                        <div class="col-12">
-                            <div class="page-title-box d-sm-flex align-items-center justify-content-between">
-                                <h4 class="mb-sm-0">Analytics</h4>
+            <!-- start page title -->
+            <div class="row">
+                <div class="col-12">
+                    <div class="page-title-box d-sm-flex align-items-center justify-content-between">
+                        <h4 class="mb-sm-0">Analytics</h4>
 
-                                <div class="page-title-right">
-                                    <ol class="breadcrumb m-0">
-                                        <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
-                                        <li class="breadcrumb-item active">Analytics</li>
-                                    </ol>
-                                </div>
-
-                            </div>
+                        <div class="page-title-right">
+                            <ol class="breadcrumb m-0">
+                                <li class="breadcrumb-item"><a href="javascript: void(0);">Dashboards</a></li>
+                                <li class="breadcrumb-item active">Analytics</li>
+                            </ol>
                         </div>
+
                     </div>
-                    <!-- end page title -->
+                </div>
+            </div>
+            <!-- end page title -->
 
-                    <div class="row">
-                        <div class="col-xxl-12">
-                            <div class="d-flex flex-column h-100">
-                               
-                                <p style="color:brown;font-size:18px;">Hello , <b>{{ Auth::guard('blockpartner')->user()->name }}</b></p>
-                                <div id="test">
-                            
+            <div class="row">
+                <div class="col-xxl-12">
+                    <div class="d-flex flex-column h-100">
+
+                        <p style="color:brown;font-size:18px;">Hello ,
+                            <b>{{ Auth::guard('blockpartner')->user()->name }}</b></p>
+                        <div id="test">
+
+                        </div>
+                        <div class="row">
+
+                            <div class="col-md-3">
+                                <div class="card card-animate">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <p class="fw-medium text-muted mb-0">Employees</p>
+                                                <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                                        data-target="{{ $total_employee }}">{{ $total_employee }}</span>
+                                                </h2>
+                                                <a href="{{ url('/block-franchise/employee') }}">
+                                                    <p class="mb-0 text-muted"><span
+                                                            class="badge bg-light text-success mb-0"> View</span></p>
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <div class="avatar-sm flex-shrink-0">
+                                                    <span class="avatar-title bg-soft-info rounded-circle fs-2">
+                                                        <i data-feather="users" class="text-info"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
                                 </div>
-                                <div class="row">
-
-                                    <div class="col-md-3">
-                                        <div class="card card-animate">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between">
-                                                    <div>
-                                                        <p class="fw-medium text-muted mb-0">Employees</p>
-                                                        <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value" data-target="{{ $total_employee }}">{{ $total_employee }}</span></h2>
-                                                        <a href="{{ url('/block-franchise/employee') }}"><p class="mb-0 text-muted"><span class="badge bg-light text-success mb-0"> View</span></p></a>
-                                                    </div>
-                                                    <div>
-                                                        <div class="avatar-sm flex-shrink-0">
-                                                            <span class="avatar-title bg-soft-info rounded-circle fs-2">
-                                                                <i data-feather="users" class="text-info"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                    <div class="col-md-3">
-                                        <div class="card card-animate">
-                                            <div class="card-body">
-                                                <div class="d-flex justify-content-between">
-                                                    <div>
-                                                        <p class="fw-medium text-muted mb-0">Merchants</p>
-                                                        <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value" data-target="{{  $total_merchant }}">{{  $total_merchant }}</span></h2>
-                                                        <a href="{{ url('/block-franchise/merchant') }}"><p class="mb-0 text-muted"><span class="badge bg-light text-success mb-0"> View</span></p></a>
-                                                    </div>
-                                                    <div>
-                                                        <div class="avatar-sm flex-shrink-0">
-                                                            <span class="avatar-title bg-soft-info rounded-circle fs-2">
-                                                                <i data-feather="users" class="text-info"></i>
-                                                            </span>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                   
-
-
-                                </div> 
-
-                               
                             </div>
-                        </div> <!-- end col-->
+                            <div class="col-md-3">
+                                <div class="card card-animate">
+                                    <div class="card-body">
+                                        <div class="d-flex justify-content-between">
+                                            <div>
+                                                <p class="fw-medium text-muted mb-0">Merchants</p>
+                                                <h2 class="mt-4 ff-secondary fw-semibold"><span class="counter-value"
+                                                        data-target="{{ $total_merchant }}">{{ $total_merchant }}</span>
+                                                </h2>
+                                                <a href="{{ url('/block-franchise/merchant') }}">
+                                                    <p class="mb-0 text-muted"><span
+                                                            class="badge bg-light text-success mb-0"> View</span></p>
+                                                </a>
+                                            </div>
+                                            <div>
+                                                <div class="avatar-sm flex-shrink-0">
+                                                    <span class="avatar-title bg-soft-info rounded-circle fs-2">
+                                                        <i data-feather="users" class="text-info"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
 
-                        {{-- <div class="col-xxl-7">
+
+
+                        </div>
+
+
+                    </div>
+                </div> <!-- end col-->
+
+                {{-- <div class="col-xxl-7">
                             <div class="row h-100">
                                 <div class="col-xl-6">
                                     <div class="card card-height-100">
@@ -177,11 +192,11 @@
 
                             </div> <!-- end row-->
                         </div> --}}
-                        <!-- end col -->
-                    </div>
-                     <!-- end row-->
-                     
-                     {{-- <div class="row">
+                <!-- end col -->
+            </div>
+            <!-- end row-->
+
+            {{-- <div class="row">
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
@@ -189,14 +204,14 @@
                                 list </h5>
                         
                         </div>
-                        @if(session()->has('success'))
+                        @if (session()->has('success'))
                             <div class="alert alert-secondary alert-dismissible alert-solid alert-label-icon fade show" role="alert">
                                 <i class="ri-check-double-line label-icon"></i><strong>Success</strong> - {{ session()->get('success') }}
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
                             </div>
                         @endif
                     
-                        @if(session()->has('error'))
+                        @if (session()->has('error'))
                             <div class="alert alert-warning alert-dismissible alert-solid alert-label-icon fade show" role="alert">
                                 <i class="ri-alert-line label-icon"></i><strong>Error</strong> - {{ session()->get('error') }}
                                 <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>
@@ -240,7 +255,7 @@
                 </div>
             </div> --}}
 
-                    {{-- <div class="row">
+            {{-- <div class="row">
                         <div class="col-xl-6">
                             <div class="card">
                                 <div class="card-header border-0 align-items-center d-flex">
@@ -326,9 +341,9 @@
                             </div><!-- end card -->
                         </div><!-- end col -->
                     </div> --}}
-                    <!-- end row -->
+            <!-- end row -->
 
-                    {{-- <div class="row">
+            {{-- <div class="row">
                         <div class="col-xl-4">
                             <div class="card card-height-100">
                                 <div class="card-header align-items-center d-flex">
@@ -566,69 +581,65 @@
                             </div><!-- end card -->
                         </div><!-- end col -->
                     </div> --}}
-                    <!-- end row -->
+            <!-- end row -->
 
-                </div>
-                <!-- container-fluid -->
-            </div>
-            <!-- End Page-content -->
+        </div>
+        <!-- container-fluid -->
+    </div>
+    <!-- End Page-content -->
 
 
-@include("block-franchise.include.footer");
-<script>
-    $.ajax({
-        type: "Get",
-        url: "/check/payments/block",
-        success: function (response) {
-        // $('#pro').val(response.error);
-       let errr= String(response.error);
-        if (errr != 'undefined') {
-            
-     
-        $("#test").append(`\
+    @include('block-franchise.include.footer');
+    <script>
+        $.ajax({
+            type: "Get",
+            url: "{{ url('/check/payments/block') }}",
+            success: function(response) {
+                // $('#pro').val(response.error);
+                let errr = String(response.error);
+                if (errr != 'undefined') {
+
+
+                    $("#test").append(`\
+                    
         <div class="alert alert-warning alert-dismissible alert-solid alert-label-icon fade show" role="alert">\
                                     <i class="ri-alert-line label-icon"></i><strong>Error</strong> ${response.error}\
                                     <button type="button" class="btn-close btn-close-white" data-bs-dismiss="alert" aria-label="Close"></button>\
                                 </div> \
-        `);
-    }
-        // let   fcookie='mycookie';
-        // var date = new Date();
-// date.setTime(date.getTime() + (30 * 1000));
-// $.cookie('fcookie', response.error, { expires: date }); 
-    //document.cookie=fcookie+"=" + response.error ;
-    //document.cookie="expires=" + date ;
-    // document.cookie=fcookie+"=" + 'undefined' ;
-    // setTimeout(function(){
-    //     document.cookie=fcookie+"=" + 'undefined' ;
-    // }, 1000);
-    console.log(response.error)
-   
-        }
-    });
-</script>
-<script>
-    function delete_row(id)
-    {
-       //  alert(id);exit();
-        swal({
-                 title: "Are you sure?",
-                 text: "Once deleted, you will not be able to recover this imaginary file!",
-                 icon: "warning",
-                 buttons: true,
-                 dangerMode: true,
-               })
-               .then((willDelete) => {
-                 if (willDelete) 
-                 {
-                   document.getElementById("delete_submit"+id).submit();
-                 } else 
-                 {
-                   // swal("Your imaginary file is safe!");
-                 }
-               });
-    } 
-   
-   </script>
 
- 
+        `);
+                }
+                // let   fcookie='mycookie';
+                // var date = new Date();
+                // date.setTime(date.getTime() + (30 * 1000));
+                // $.cookie('fcookie', response.error, { expires: date }); 
+                //document.cookie=fcookie+"=" + response.error ;
+                //document.cookie="expires=" + date ;
+                // document.cookie=fcookie+"=" + 'undefined' ;
+                // setTimeout(function(){
+                //     document.cookie=fcookie+"=" + 'undefined' ;
+                // }, 1000);
+                console.log(response.error)
+
+            }
+        });
+    </script>
+    <script>
+        function delete_row(id) {
+            //  alert(id);exit();
+            swal({
+                    title: "Are you sure?",
+                    text: "Once deleted, you will not be able to recover this imaginary file!",
+                    icon: "warning",
+                    buttons: true,
+                    dangerMode: true,
+                })
+                .then((willDelete) => {
+                    if (willDelete) {
+                        document.getElementById("delete_submit" + id).submit();
+                    } else {
+                        // swal("Your imaginary file is safe!");
+                    }
+                });
+        }
+    </script>

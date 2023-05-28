@@ -441,6 +441,7 @@ return response()->json(['error' =>'Please Pay  Register Fee First']);
 
     public function generateBusinessReport(Request $request)
     {
+        // exit();
         $employee_id = Auth::guard('employee')->user()->id;
         $from_date = $request->from_date;
         $to_date = $request->to_date;

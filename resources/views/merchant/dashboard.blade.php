@@ -585,7 +585,7 @@
 <script>
     $.ajax({
         type: "Get",
-        url: "/check/payments",
+        url: "{{url('/check/payments')}}",
         success: function (response) {
         // $('#pro').val(response.error);
        let errr= String(response.error);
