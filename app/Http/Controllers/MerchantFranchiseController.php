@@ -189,7 +189,9 @@ class MerchantFranchiseController extends Controller
         $type = $request->type;
         $user_id = Auth::guard('merchant')->user()->id;
         $package_id = $request->advertisement_charge;
+        $amount = 0;
         $amount = $request->amount;
+
         $from_date = date('Y-m-01');
         $to_date = date('Y-m-d');
         $data = [

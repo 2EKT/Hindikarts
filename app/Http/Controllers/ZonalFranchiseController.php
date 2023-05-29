@@ -118,7 +118,9 @@ class ZonalFranchiseController extends Controller
         $user_id = Auth::guard('zonepartner')->user()->id;
         $from_date = date('Y-m-01');
         $to_date = date('Y-m-d');
+        $amount = 0;
         $amount = $request->amount;
+
         $data = [
             'Zonal_id' =>  $user_id,
             'type' => $type,

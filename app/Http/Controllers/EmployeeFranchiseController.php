@@ -100,7 +100,9 @@ class EmployeeFranchiseController extends Controller
         $to_date = date('Y-m-d');
         // $from_date = date('2023-07-01');
 //            $to_date = date('2023-07-24');
+        $amount = 0;
         $amount = $request->amount;
+
         $data = [
             'employee_id' =>  $user_id,
             'type' => $type,

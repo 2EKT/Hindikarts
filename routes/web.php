@@ -48,6 +48,7 @@ use App\Models\Employee;
 use App\Models\Merchant;
 // use App\Models\Districtpartner;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\DB;
 
 use Illuminate\Support\Facades\Cache;
 
@@ -269,6 +270,8 @@ Route::group(['middleware'=>'blockpartner'],function(){
     Route::post('/block-franchise/employee/update', [BlockFranchiseController::class, 'update_employee']);
     Route::post('/block-franchise/employee/delete', [BlockFranchiseController::class, 'destroy_employee']);
 
+    Route::get('/block/generate-report',[BlockFranchiseController::class,'generateBusinessReport']);
+
     Route::get('/block-franchise/payments', [BlockFranchiseController::class,'payments']);
     Route::post('/block-franchise/make_payment', [BlockFranchiseController::class,'make_payment']);
     Route::post('/block-franchise/get_amount', [BlockFranchiseController::class,'get_amount']);
@@ -420,7 +423,92 @@ Route::get('/Reg_admin',function(){
        echo "test";
     });
 
-   Route::get('/clear',function(){
-$Cache= Cache::flush();
-dd($Cache);
+
+   Route::get('/test',function(){
+// $Cache= Cache::flush();
+// dd($Cache);
+$emp =DB::table('employees')->where('block_partner_id' , 2)->get();
+// $table =DB::table('merchants')->where('employer_id' , $table->id)->get();
+// $table =DB::table('merchant_payments')->where('merchant_id' , )->first();
+$table =DB::table('merchants')->where('block_partner_id' , 2)->get();
+// foreach ($bl_tables as $key => $table) {
+//     $table_merchant_id =DB::table('merchants')->where('employer_id' , $table->id)->get();
+//     $table =DB::table('merchant_payments')->where('merchant_id' ,$table_merchant_id )->get();
+    
+// }
+// dd($bl_tables);
+$data=[];
+$sums=0;
+// $total_sum = []; 
+foreach ($emp as $key => $emps) {
+    
+    $merchant_id =DB::table('merchants')->where('employer_id' , $emps->id)->get();
+    foreach ($merchant_id as $key => $value) {
+        # code...
+    
+    $merchant_collections = DB::table('merchant_payments')
+    ->where('merchant_id', $value->id)
+    ->where('type', 'registration')
+    // ->whereDate('created_at', '>=', $from_date)
+    // ->whereDate('created_at', '<=', $to_date)
+    ->sum('amount');
+    $sums= $sums+ $merchant_collections;
+    // $data[]=[
+    //     'Collection' =>  $sums,
+    // ];
+   
+}
+    // $name = $emps->name;
+    $data[]=[
+        'Name' => $emps->name,
+            'Collection' =>  $sums,
+    ];
+    $sums=0;
+    
+}
+// foreach ($data as  $names) {
+    
+//     // echo "Name :" . $->name ."<br>";
+//    echo  $names;
+//     // echo "Collection : $data->Collection <br>";
+// }
+// echo '<pre>'; print_r($data); echo '</pre>';
+foreach($data as $result) {
+    echo $result['Name'] ."<br>";
+    echo $result['Collection'] ."<br>";
+
+}
+// echo $sums;
+//  dd($data);
+// print_r($name);
+$sum=0;
+$record =[];
+foreach( $table  as $tables){
+    $record = DB::table('merchant_payments')
+->where('merchant_id',$tables->id)
+->where('type', 'registration')
+// ->whereDate('created_at', '>=', $from_date)
+// ->whereDate('created_at', '<=', $to_date)
+->get();
+    $merchant_collection = DB::table('merchant_payments')
+                    ->where('merchant_id',$tables->id)
+                    ->where('type', 'registration')
+                    // ->whereDate('created_at', '>=', $from_date)
+                    // ->whereDate('created_at', '<=', $to_date)
+                    ->sum('amount');
+
+
+                    // dd($merchant);
+                    // $merchant_collection +=  $merchant_collection + 0;
+                    $sum= $sum+ $merchant_collection;
+                    // echo $merchant_collection . "<br>";
+
+                    // echo($record);
+                }
+          echo   "Total sum =  $sum <br>";
+                // dd($tables->id);
+ dd($emp);
+
+
+
    });

@@ -115,7 +115,9 @@ class DistrictFranchiseController extends Controller
         $user_id = Auth::guard('districtpartner')->user()->id;
         $from_date = date('Y-m-01');
         $to_date = date('Y-m-d');
+        $amount = 0;
         $amount = $request->amount;
+
         $data = [
             'Distric_id' =>  $user_id,
             'type' => $type,

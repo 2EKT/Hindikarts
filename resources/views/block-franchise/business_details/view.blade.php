@@ -43,7 +43,7 @@
                               </div>
                               <thead>
                                 <tr>
-                                    <th scope="col">MERCHANT NAME</th>
+                                    <th scope="col">Employee NAME</th>
                                     <th scope="col">MERCHANT COLLECTIONS</th>
                                     <th scope="col">SUBSCRIPTION COLLECTION</th>
                                     <th scope="col">ADVERTERISE COLLECTIONS</th>
@@ -51,6 +51,7 @@
                                     <th scope="col">TOTAL COLLECTION</th>
                                     <th scope="col">GST</th>
                                     <th scope="col">NET COLLECTIONS</th>
+                                    <th scope="col">EMPLOYEE COM.</th>
                                 </tr>
                               </thead>
                               <tbody id="Block_business_collection">
@@ -171,13 +172,14 @@
            let to_date = $('#to_date').val();
                 $.ajax({
                     url:"{{ url('block/generate-report') }}",
-                    type:'POST',
+                    type:'Get',
                     data:{
                       _token: "{{ csrf_token() }}",
                       from_date: from_date,
                       to_date: to_date,
                     },
                     success:function(data){
+                      console.log(data);
                         let collection_data = data.data;
                         let bonus = collection_data.bonus;
                         let merchants = collection_data.merchants;
@@ -201,10 +203,11 @@
                                        '<td>' + item.total_collection + '</td>' + 
                                        '<td>' + item.gst + '</td>' + 
                                        '<td>' + item.net_collection + '</td>' + 
+                                       '<td>' +0.00+ '</td>' + 
                                        '</tr>'; 
                             });
 
-                            $('#employee_business_collection').append(row);
+                            $('#Block_business_collection').append(row);
 
                             total_row = '<tr>' + 
                                        '<th scope="row">Total ' + total_estimation.total_merchant + '</th>' + 
@@ -215,6 +218,7 @@
                                        '<td>' + total_estimation.all_total_collection_by_merchants + '</td>' + 
                                        '<td>' + total_estimation.total_gst_by_merchants + '</td>' + 
                                        '<td>' + total_estimation.total_net_collection_by_merchants + '</td>' + 
+                                       '<td>' + 0.00 + '</td>' + 
                                        '</tr>'; 
                           
                             $('#Block_business_collection').append(total_row);

@@ -178,6 +178,8 @@
                       to_date: to_date,
                     },
                     success:function(data){
+                         
+                         console.log(data);
                         let collection_data = data.data;
                         let bonus = collection_data.bonus;
                         let merchants = collection_data.merchants;
