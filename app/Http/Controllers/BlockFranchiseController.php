@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 
+
 use App\Models\BlockFranchise;
 use App\Models\{Blockpartner, Payments};
 use Illuminate\Http\Request;
@@ -432,7 +433,7 @@ class BlockFranchiseController extends Controller
     }
     public function generateBusinessReport(Request $request)
     {
-        
+
         // exit();
         $block_id = Auth::guard('blockpartner')->user()->id;
         // $block_id = 2;
@@ -440,123 +441,191 @@ class BlockFranchiseController extends Controller
         $from_date = $request->from_date;
         $to_date = $request->to_date;
         $service_charges = DB::table('service_charges')->find(1);
-        $other_collection = !empty($service_charges) ? $service_charges->value : 0;
+        // $other_collection = !empty($service_charges) ? $service_charges->value : 0;
+        $other_collection = 0;
         $other_collection = $this->twoDecimalPoint($other_collection);
 
         $all_merchants = [];
         // $employee= 
         // $query = DB::table('employees')->where('block_partner_id', $block_id);
-        $query = DB::table('employees')->where('block_partner_id' , $block_id);
-        
-        $merchants = $query->get();
-        $total_merchant = $query->count();
-        
+        $query = DB::table('employees')->where('block_partner_id', $block_id);
 
-        $total_collection_by_merchants = $this->twoDecimalPoint(0);
-        $total_subscription_collection_by_merchants = $this->twoDecimalPoint(0);
-        $total_advertise_collection_by_merchants = $this->twoDecimalPoint(0);
-        $total_other_collection_by_merchants = $this->twoDecimalPoint(0);
-        $all_total_collection_by_merchants = $this->twoDecimalPoint(0);
-        $total_gst_by_merchants = $this->twoDecimalPoint(0);
-        $total_net_collection_by_merchants = $this->twoDecimalPoint(0);
+        $merchants = $query->get();
+        $total_block = $query->count();
+
+
+        // $total_collection_by_merchants = $this->twoDecimalPoint(0);
+        // $total_collection_by_EMPLOYEE_COM  = $this->twoDecimalPoint(0);
+        // $total_subscription_collection_by_merchants = $this->twoDecimalPoint(0);
+        // $total_advertise_collection_by_merchants = $this->twoDecimalPoint(0);
+        // $total_other_collection_by_merchants = $this->twoDecimalPoint(0);
+        // $all_total_collection_by_merchants = $this->twoDecimalPoint(0);
+        // $total_gst_by_merchants = $this->twoDecimalPoint(0);
+        // $total_net_collection_by_merchants = $this->twoDecimalPoint(0);
         $total_earnings = $this->twoDecimalPoint(0);
         $bonus = $this->twoDecimalPoint(0);
         $wallet_balance = $this->twoDecimalPoint(0);
         $withdrawl_balance = $this->twoDecimalPoint(0);
-
+        // $merchant_collection=0;
+        $total_Sum_Merchant_collection = 0;
+        $total_Sum_subscription_collection = 0;
+        $total_Sum_adverise_collection = 0;
 
         foreach ($merchants as $merchant) {
-            $merchant_id =DB::table('merchants')->where('employer_id' , $merchant->id)->get();
-            foreach( $merchant_id  as  $merchant_ids){
+            $merchant_id = DB::table('merchants')->where('employer_id', $merchant->id)->get();
+            foreach ($merchant_id  as  $merchant_ids) {
 
-      
-            $merchant_collection = DB::table('merchant_payments')
-                ->where('merchant_id',  $merchant_ids->id)
+                //   echo $merchant_ids->id ."<br>";
+                $merchant_collection = DB::table('merchant_payments')
+                    ->where('merchant_id',  $merchant_ids->id)
+                    ->where('type', 'registration')
+                    ->whereDate('created_at', '>=', $from_date)
+                    ->whereDate('created_at', '<=', $to_date)
+                    ->sum('amount');
+                //  echo   " sum = $merchant_collection";
+                $subscription_collection = DB::table('merchant_payments')
+                    ->where('merchant_id',  $merchant_ids->id)
+                    ->where('type', 'subscription')
+                    ->whereDate('created_at', '>=', $from_date)
+                    ->whereDate('created_at', '<=', $to_date)
+                    ->sum('amount');
+
+                $adverise_collection = DB::table('merchant_payments')
+                    ->where('merchant_id',  $merchant_ids->id)
+                    ->where('type', 'advertise')
+                    ->whereDate('created_at', '>=', $from_date)
+                    ->whereDate('created_at', '<=', $to_date)
+                    ->sum('amount');
+
+                $total_Sum_Merchant_collection = $total_Sum_Merchant_collection + $merchant_collection;
+                $total_Sum_subscription_collection = $total_Sum_subscription_collection + $subscription_collection;
+                $total_Sum_adverise_collection = $total_Sum_adverise_collection + $adverise_collection;
+                
+                // $total_collection = $merchant_collection +  $subscription_collection + $adverise_collection + $other_collection;
+                $total_collection =  $total_Sum_Merchant_collection + $total_Sum_subscription_collection + $total_Sum_adverise_collection + $other_collection;
+
+                // echo   " sum = $total_Sum_Merchant_collection";
+                $gst = ($total_collection > 0) ? ($total_collection * 18) / 100 : 0;
+                $net_collection = $total_collection - $gst;
+                $EMPLOYEE_COM = ($net_collection  > 0) ? ($net_collection * 25) / 100 : 0;
+
+
+
+
+                $EMPLOYEE_COM = $this->twoDecimalPoint($EMPLOYEE_COM);
+                $total_Sum_Merchant_collection = $this->twoDecimalPoint($total_Sum_Merchant_collection);
+                $total_Sum_subscription_collection = $this->twoDecimalPoint($total_Sum_subscription_collection);
+                $adverise_collection = $this->twoDecimalPoint($adverise_collection);
+                $total_collection = $this->twoDecimalPoint($total_collection);
+                $gst = $this->twoDecimalPoint($gst);
+                $net_collection = $this->twoDecimalPoint($net_collection);
+
+
+
+
+                $wallet_balance = $this->twoDecimalPoint($merchant->wallet_balance);
+            }
+            //  echo $merchant->name;
+            $all_merchants[] = [
+                "name" => $merchant->name,
+                "merchant_collection" => $total_Sum_Merchant_collection,
+                "subscription_collection" =>  $total_Sum_subscription_collection,
+                "adverise_collection" => $total_Sum_adverise_collection,
+                "other_collection" => $other_collection,
+                "total_collection" => $total_collection,
+                "gst" => $gst,
+                "net_collection" => $net_collection,
+                "Employee_Com" => $EMPLOYEE_COM
+            ];
+            $total_Sum_Merchant_collection = 0;
+            $total_Sum_subscription_collection = 0;
+            $total_Sum_adverise_collection = 0;
+        }
+
+        $table = DB::table('merchants')->where('block_partner_id', $block_id)->get();
+        $total_merchant_Collection_sum = 0;
+        $total_Collection_sub = 0;
+        $total_advertize = 0;
+        $total_collection_Grand = 0;
+        $Grand_gsts = 0;
+        $Grand_net_collection = 0;
+        $G_EMPLOYEE_COMs = 0;
+        $Total_other_collection =0;
+        foreach ($table  as $tables) {
+
+            $merchant_collection_Total = DB::table('merchant_payments')
+                ->where('merchant_id', $tables->id)
                 ->where('type', 'registration')
                 ->whereDate('created_at', '>=', $from_date)
                 ->whereDate('created_at', '<=', $to_date)
                 ->sum('amount');
 
-            $subscription_collection = DB::table('merchant_payments')
-                ->where('merchant_id',  $merchant_ids->id)
+            $merchant_collection_Sub = DB::table('merchant_payments')
+                ->where('merchant_id', $tables->id)
                 ->where('type', 'subscription')
                 ->whereDate('created_at', '>=', $from_date)
                 ->whereDate('created_at', '<=', $to_date)
                 ->sum('amount');
-
-            $adverise_collection = DB::table('merchant_payments')
-                ->where('merchant_id',  $merchant_ids->id)
+            $adverise_collection_block_total = DB::table('merchant_payments')
+                ->where('merchant_id',  $tables->id)
                 ->where('type', 'advertise')
                 ->whereDate('created_at', '>=', $from_date)
                 ->whereDate('created_at', '<=', $to_date)
                 ->sum('amount');
 
-            $total_collection = $merchant_collection + $subscription_collection + $adverise_collection + $other_collection;
-            $gst = ($total_collection > 0) ? ($total_collection * 18) / 100 : 0;
-            $net_collection = $total_collection - $gst;
-              
-            $total_collection_by_merchants += $merchant_collection;
-            $total_subscription_collection_by_merchants += $subscription_collection;
-            $total_advertise_collection_by_merchants += $adverise_collection;
-            $total_other_collection_by_merchants += $other_collection;
-            $all_total_collection_by_merchants += $total_collection;
-            $total_gst_by_merchants += $gst;
-            $total_net_collection_by_merchants += $net_collection;
+            // dd($merchant);
+            // $merchant_collection +=  $merchant_collection + 0;
+            $total_merchant_Collection_sum = $total_merchant_Collection_sum +  $merchant_collection_Total;
+            $total_Collection_sub += $merchant_collection_Sub;
+            $total_advertize += $adverise_collection_block_total;
 
-            $merchant_collection = $this->twoDecimalPoint($merchant_collection);
-            $subscription_collection = $this->twoDecimalPoint($subscription_collection);
-            $adverise_collection = $this->twoDecimalPoint($adverise_collection);
-            $total_collection = $this->twoDecimalPoint($total_collection);
-            $gst = $this->twoDecimalPoint($gst);
-            $net_collection = $this->twoDecimalPoint($net_collection);
-            $total_collection_by_merchants = $this->twoDecimalPoint($total_collection_by_merchants);
-            $total_subscription_collection_by_merchants = $this->twoDecimalPoint($total_subscription_collection_by_merchants);
-            $total_advertise_collection_by_merchants = $this->twoDecimalPoint($total_advertise_collection_by_merchants);
-            $total_other_collection_by_merchants = $this->twoDecimalPoint($total_other_collection_by_merchants);
-            $all_total_collection_by_merchants = $this->twoDecimalPoint($all_total_collection_by_merchants);
-            $total_gst_by_merchants = $this->twoDecimalPoint($total_gst_by_merchants);
-            $total_net_collection_by_merchants = $this->twoDecimalPoint($total_net_collection_by_merchants);
-            $wallet_balance = $this->twoDecimalPoint($merchant->wallet_balance);
+            $total_collection_Grand =    $total_merchant_Collection_sum + $total_Collection_sub + $other_collection + $total_advertize;
 
-            if ($total_net_collection_by_merchants > 0) {
-                $total_earnings = $this->twoDecimalPoint(($total_net_collection_by_merchants * 25) / 100);
+            $Grand_gsts = ($total_collection_Grand > 0) ? ($total_collection_Grand * 18) / 100 : 0;
+            $Grand_net_collection =   $total_collection_Grand - $Grand_gsts;
+            $G_EMPLOYEE_COMs = ($Grand_net_collection > 0) ? ($Grand_net_collection * 25) / 100 : 0;
+            $Total_other_collection +=  $other_collection ;
+            if ($Grand_net_collection > 0) {
+                $total_earnings = $this->twoDecimalPoint(($Grand_net_collection * 25) / 100);
             }
 
-            if ($total_net_collection_by_merchants > 200000) {
-                $bonus = $this->twoDecimalPoint(($total_net_collection_by_merchants * 10) / 100);
+            if ($Grand_net_collection > 200000) {
+                $bonus = $this->twoDecimalPoint(($Grand_net_collection * 10) / 100);
             }
-        }
-            //  echo $merchant->name;
-            $all_merchants[] = [
-                "name" => $merchant->name,
-                "merchant_collection" => $merchant_collection,
-                "subscription_collection" => $subscription_collection,
-                "adverise_collection" => $adverise_collection,
-                "other_collection" => $other_collection,
-                "total_collection" => $total_collection,
-                "gst" => $gst,
-                "net_collection" => $net_collection
-            ];
+
+            $total_collection_Grand =  $this->twoDecimalPoint($total_collection_Grand);
+            $total_Collection_sub =  $this->twoDecimalPoint($total_Collection_sub);
+            $total_advertize =  $this->twoDecimalPoint($total_advertize);
+            $Grand_gsts =  $this->twoDecimalPoint($Grand_gsts);
+            $Grand_net_collection =  $this->twoDecimalPoint($Grand_net_collection);
+            $G_EMPLOYEE_COMs =  $this->twoDecimalPoint($G_EMPLOYEE_COMs);
+            $total_merchant_Collection_sum =  $this->twoDecimalPoint($total_merchant_Collection_sum);
+            $Total_other_collection =  $this->twoDecimalPoint($Total_other_collection);
+
+            // echo $merchant_collection . "<br>";
+
+            // echo($record);
         }
 
         $data = [
             "merchants" => $all_merchants,
             "total_estimation" => (object) [
-                "total_merchant" => $total_merchant,
-                "total_collection_by_merchants" => $total_collection_by_merchants,
-                'total_subscription_collection_by_merchants' => $total_subscription_collection_by_merchants,
-                'total_advertise_collection_by_merchants' => $total_advertise_collection_by_merchants,
-                'total_other_collection_by_merchants' => $total_other_collection_by_merchants,
-                'all_total_collection_by_merchants' => $all_total_collection_by_merchants,
-                'total_gst_by_merchants' => $total_gst_by_merchants,
-                'total_net_collection_by_merchants' => $total_net_collection_by_merchants,
+                "total_block" =>  $total_block,
+                "total_collection_by_merchants" => $total_merchant_Collection_sum,
+                'total_subscription_collection_by_merchants' => $total_Collection_sub,
+                'total_advertise_collection_by_merchants' =>  $total_advertize,
+                'total_other_collection_by_merchants' => $Total_other_collection,
+                'all_total_collection_by_merchants' =>  $total_collection_Grand,
+                'total_gst_by_merchants' => $Grand_gsts,
+                'total_collection_by_EMPLOYEE_COM' =>  $G_EMPLOYEE_COMs,
+                'total_net_collection_by_merchants' =>  $Grand_net_collection,
             ],
             "total_earnings" => $total_earnings,
             "bonus" => $bonus,
             "wallet_balance" => $wallet_balance,
             "withdrawl_balance" => $withdrawl_balance,
         ];
-
+        // $total_collection_by_EMPLOYEE_COM= 0;
         return response()->json(['status' => true, 'message' => 'Success', 'data' => $data,]);
     }
 

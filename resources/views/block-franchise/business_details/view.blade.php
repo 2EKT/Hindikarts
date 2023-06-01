@@ -107,6 +107,13 @@
                                   </div>
                                   <div class="col-md-3 mt-2">
                                     <div style="border: 1px solid #000;text-align: center;">
+                                        <h5 style="background: #a80cad;padding: 10px;color: #fcf9fa">Employee Commission
+                                        </h5>
+                                        <p id="total_collection_by_EMPLOYEE_COM"></p>
+                                    </div>
+                                  </div>
+                                  <div class="col-md-3 mt-2">
+                                    <div style="border: 1px solid #000;text-align: center;">
                                         <h5 style="background: #fabf8f;padding: 10px;color: #000">Total GST Amount</h5>
                                         <p id="total_gst_by_merchants"></p>
                                     </div>
@@ -203,14 +210,14 @@
                                        '<td>' + item.total_collection + '</td>' + 
                                        '<td>' + item.gst + '</td>' + 
                                        '<td>' + item.net_collection + '</td>' + 
-                                       '<td>' +0.00+ '</td>' + 
+                                       '<td>' +item.Employee_Com+ '</td>' + 
                                        '</tr>'; 
                             });
 
                             $('#Block_business_collection').append(row);
 
                             total_row = '<tr>' + 
-                                       '<th scope="row">Total ' + total_estimation.total_merchant + '</th>' + 
+                                       '<th scope="row">Total ' + total_estimation.total_block + '</th>' + 
                                        '<td>' + total_estimation.total_collection_by_merchants + '</td>' + 
                                        '<td>' + total_estimation.total_subscription_collection_by_merchants + '</td>' + 
                                        '<td>' + total_estimation.total_advertise_collection_by_merchants + '</td>' + 
@@ -218,7 +225,8 @@
                                        '<td>' + total_estimation.all_total_collection_by_merchants + '</td>' + 
                                        '<td>' + total_estimation.total_gst_by_merchants + '</td>' + 
                                        '<td>' + total_estimation.total_net_collection_by_merchants + '</td>' + 
-                                       '<td>' + 0.00 + '</td>' + 
+                                       '<td>' + total_estimation.total_collection_by_EMPLOYEE_COM + '</td>' + 
+                                       
                                        '</tr>'; 
                           
                             $('#Block_business_collection').append(total_row);
@@ -229,6 +237,7 @@
                             $("#all_total_collection_by_merchants").text(total_estimation.all_total_collection_by_merchants);
                             $("#total_gst_by_merchants").text(total_estimation.total_gst_by_merchants);
                             $("#total_net_collection_by_merchants").text(total_estimation.total_net_collection_by_merchants);
+                            $("#total_collection_by_EMPLOYEE_COM").text(total_estimation.total_collection_by_EMPLOYEE_COM);
                             $("#total_earnings").text(total_earnings);
                             $("#bonus").text(bonus);
                             $("#wallet_balance").text(wallet_balance);

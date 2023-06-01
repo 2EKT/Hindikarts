@@ -73,7 +73,6 @@ class EmployeeFranchiseController extends Controller
         if ($type == 'registration') {
             // monthlyfees
             $amount = DB::table('monthlyfees')->first()->employee_reg;
-
             //    $amount  = 23;
         } elseif ($type == 'Monthly') {
             $amount = DB::table('monthlyfees')->first()->employee_monthly;

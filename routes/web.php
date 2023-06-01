@@ -438,32 +438,58 @@ $table =DB::table('merchants')->where('block_partner_id' , 2)->get();
 // }
 // dd($bl_tables);
 $data=[];
-$sums=0;
-// $total_sum = []; 
+$sums_merchant_collection=0;
+$sums_merchant_sub=0;
+$sums_merchant_adv=0;
+
+$total_sum_collection = 0; 
 foreach ($emp as $key => $emps) {
     
     $merchant_id =DB::table('merchants')->where('employer_id' , $emps->id)->get();
     foreach ($merchant_id as $key => $value) {
-        # code...
+        
     
     $merchant_collections = DB::table('merchant_payments')
     ->where('merchant_id', $value->id)
     ->where('type', 'registration')
     // ->whereDate('created_at', '>=', $from_date)
     // ->whereDate('created_at', '<=', $to_date)
+    ->sum('amount');   
+    
+    $merchant_sub = DB::table('merchant_payments')
+    ->where('merchant_id', $value->id)
+    ->where('type', 'subscription')
+    // ->whereDate('created_at', '>=', $from_date)
+    // ->whereDate('created_at', '<=', $to_date)
+    ->sum('amount'); 
+    $merchant_adv = DB::table('merchant_payments')
+    ->where('merchant_id', $value->id)
+    ->where('type', 'advertise')
+    // ->whereDate('created_at', '>=', $from_date)
+    // ->whereDate('created_at', '<=', $to_date)
     ->sum('amount');
-    $sums= $sums+ $merchant_collections;
+    $sums_merchant_collection= $sums_merchant_collection+ $merchant_collections;
+    $sums_merchant_sub = $sums_merchant_sub +  $merchant_sub;
+    $sums_merchant_adv = $sums_merchant_adv +   $merchant_adv;
+
+    // $total_sum_collection+= $sums_merchant_collection + $sums_merchant_sub + $sums_merchant_adv + 100;
+    // $sums_merchant_collection= $sums_merchant_collection+ $merchant_collections;
+    // // echo  $sums_merchant_collection . "<br>";
     // $data[]=[
-    //     'Collection' =>  $sums,
+    //     'Collection' =>  $sums_merchant_collection,
     // ];
    
 }
     // $name = $emps->name;
     $data[]=[
         'Name' => $emps->name,
-            'Collection' =>  $sums,
+            'Collection' =>  $sums_merchant_collection,
+            'Sub' =>   $sums_merchant_sub,
+            //'totalsum'=>  $total_sum
     ];
-    $sums=0;
+    $sums_merchant_collection=0;
+    $sums_merchant_sub=0;
+
     
 }
 // foreach ($data as  $names) {
@@ -476,12 +502,20 @@ foreach ($emp as $key => $emps) {
 foreach($data as $result) {
     echo $result['Name'] ."<br>";
     echo $result['Collection'] ."<br>";
-
+    echo $result['Sub'] ."<br>";
+    // echo $result['totalsum'] ."<br>";
+    
 }
+
+// echo $total_sum_collection ;
+$total_sum= 0;
 // echo $sums;
 //  dd($data);
 // print_r($name);
 $sum=0;
+$total =0;
+$total_advertize=0;
+$total_collection = 0;
 $record =[];
 foreach( $table  as $tables){
     $record = DB::table('merchant_payments')
@@ -496,16 +530,35 @@ foreach( $table  as $tables){
                     // ->whereDate('created_at', '>=', $from_date)
                     // ->whereDate('created_at', '<=', $to_date)
                     ->sum('amount');
-
+                    
+                    $merchant_collection_Sub = DB::table('merchant_payments')
+                    ->where('merchant_id',$tables->id)
+                    ->where('type', 'subscription')
+                    // ->whereDate('created_at', '>=', $from_date)
+                    // ->whereDate('created_at', '<=', $to_date)
+                    ->sum('amount');
+                    $adverise_collection_block_total = DB::table('merchant_payments')
+                    ->where('merchant_id',  $tables->id)
+                    ->where('type', 'advertise')
+                    // ->whereDate('created_at', '>=', $from_date)
+                    // ->whereDate('created_at', '<=', $to_date)
+                    ->sum('amount');
 
                     // dd($merchant);
                     // $merchant_collection +=  $merchant_collection + 0;
                     $sum= $sum+ $merchant_collection;
+                    $total += $merchant_collection_Sub;
+                    $total_advertize += $adverise_collection_block_total;
+
+                    $total_collection =    $sum + $total + 0 + $total_advertize;
                     // echo $merchant_collection . "<br>";
 
                     // echo($record);
                 }
-          echo   "Total sum =  $sum <br>";
+          echo   "Total sum reg_collection =  $sum <br>";
+          echo   "Total sum sub_collection = $total <br>";
+          echo   "Total sum adv_collection = $total_advertize <br>";
+          echo   "Total sum total_collection = $total_collection <br>";
                 // dd($tables->id);
  dd($emp);
 
