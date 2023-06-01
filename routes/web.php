@@ -87,6 +87,10 @@ Route::group(['middleware'=>'admin'],function(){
     Route::post('/admin/update_password',[AdminController::class,'update_password']);
     Route::get('/admin/change-password',[AdminController::class,'change_password']);
 
+    Route::get('/admin/business-details',[AdminController::class,'business_details']);
+
+    Route::get('/admin/generate-report',[AdminController::class,'generateBusinessReport']);
+
     Route::resource('/admin/user', UserController::class);
     Route::resource('/admin/service', ServiceController::class);
     Route::resource('/admin/category', CategoryController::class);
@@ -173,6 +177,8 @@ Route::group(['middleware'=>'admin'],function(){
     Route::resource('/admin/servicecharge', ServiceChargeController::class);
     Route::resource('/admin/documents', BrochureController::class);
     Route::resource('/admin/frequent-questions', FrequentQuestionController::class);
+
+
 });
     });
 // Admin Routes End Here####################################################
@@ -192,7 +198,6 @@ Route::group(['middleware'=>'zonepartner'],function(){
     Route::get('/zonal-franchise/change-password',[ZonalFranchiseController::class,'change_password']);
     Route::post('/zonal-franchise/update_password',[ZonalFranchiseController::class,'update_password']);
     Route::get('/zonal-franchise/logout',[ZonalFranchiseController::class,'logout']);
-    Route::get('/zonal-franchise/business-details',[ZonalFranchiseController::class,'business_details']);
     
     Route::get('/zonal-franchise/district-partner',[ZonalFranchiseController::class,'view_districtpartner']);
     Route::get('/zonal-franchise/districtpartner/create',[ZonalFranchiseController::class,'create_districtpartner']);
@@ -208,6 +213,9 @@ Route::group(['middleware'=>'zonepartner'],function(){
     Route::get('/zonal-franchise/employee',[ZonalFranchiseController::class,'view_employee']);
     Route::get('/zonal-franchise/merchant',[ZonalFranchiseController::class,'view_merchant']);
     
+    Route::get('/zonal-franchise/business-details',[ZonalFranchiseController::class,'business_details']);
+    Route::get('/zonal-franchise/generate-report',[ZonalFranchiseController::class,'generateBusinessReport']);
+
     Route::get('/zonal-franchise/wallet', [ZonalFranchiseController::class,'wallet']);
 
     });
@@ -235,6 +243,9 @@ Route::group(['middleware'=>'districtpartner'],function(){
     Route::get('/district-franchise/blockpartner/edit/{id}', [DistrictFranchiseController::class, 'edit_blockpartner']);
     Route::post('/district-franchise/blockpartner/update', [DistrictFranchiseController::class, 'update_blockpartner']);
     Route::post('/district-franchise/blockpartner/delete', [DistrictFranchiseController::class, 'destroy_blockpartner']);
+
+    Route::get('/district-franchise/generate-report',[DistrictFranchiseController::class,'generateBusinessReport']);
+
     Route::get('/district-franchise/business-details',[DistrictFranchiseController::class,'business_details']);
     Route::get('/district-franchise/payments', [DistrictFranchiseController::class,'payments']);
     Route::post('/district-franchise/make_payment', [DistrictFranchiseController::class,'make_payment']);
@@ -370,9 +381,10 @@ Route::get('/Reg_admin',function(){
   Route::get('/Reg_Zone',function(){
       $pasword = 123456;
       $pass = Hash::make($pasword);
-      $admin =  Zonepartner::where('email','hindkartmurshidabad@gmail.com')->first();
-    //   $admin->password=$pass;
-    //   $admin->update();
+      $admin =  Zonepartner::where('email','a.agarwalla07@gmail.com')->first();
+    //   $admin =  Zonepartner::where('email','hindkartmurshidabad@gmail.com')->first();
+      $admin->password=$pass;
+      $admin->update();
     
     //print_r($admin);
     
@@ -418,9 +430,151 @@ Route::get('/Reg_admin',function(){
     
     //   print_r($admin);
     
-    }); 
+    });
+
+
+
     Route::get('/beast',function(){
-       echo "test";
+   // $Cache= Cache::flush();
+// dd($Cache);
+echo $emp =DB::table('blockpartners')->count();
+exit();
+// $table =DB::table('merchants')->where('employer_id' , $table->id)->get();
+// $table =DB::table('merchant_payments')->where('merchant_id' , )->first();
+$table =DB::table('merchants')->where('district_partner_id' , 2)->get();
+// foreach ($bl_tables as $key => $table) {
+//     $table_merchant_id =DB::table('merchants')->where('employer_id' , $table->id)->get();
+//     $table =DB::table('merchant_payments')->where('merchant_id' ,$table_merchant_id )->get();
+    
+// }
+// dd($bl_tables);
+$data=[];
+$sums_merchant_collection=0;
+$sums_merchant_sub=0;
+$sums_merchant_adv=0;
+
+$total_sum_collection = 0; 
+foreach ($emp as $key => $emps) {
+    
+    $merchant_id =DB::table('merchants')->where('block_partner_id' , $emps->id)->get();
+    foreach ($merchant_id as $key => $value) {
+        
+    
+    $merchant_collections = DB::table('merchant_payments')
+    ->where('merchant_id', $value->id)
+    ->where('type', 'registration')
+    // ->whereDate('created_at', '>=', $from_date)
+    // ->whereDate('created_at', '<=', $to_date)
+    ->sum('amount');   
+    
+    $merchant_sub = DB::table('merchant_payments')
+    ->where('merchant_id', $value->id)
+    ->where('type', 'subscription')
+    // ->whereDate('created_at', '>=', $from_date)
+    // ->whereDate('created_at', '<=', $to_date)
+    ->sum('amount'); 
+    $merchant_adv = DB::table('merchant_payments')
+    ->where('merchant_id', $value->id)
+    ->where('type', 'advertise')
+    // ->whereDate('created_at', '>=', $from_date)
+    // ->whereDate('created_at', '<=', $to_date)
+    ->sum('amount');
+    $sums_merchant_collection= $sums_merchant_collection+ $merchant_collections;
+    $sums_merchant_sub = $sums_merchant_sub +  $merchant_sub;
+    $sums_merchant_adv = $sums_merchant_adv +   $merchant_adv;
+
+    // $total_sum_collection+= $sums_merchant_collection + $sums_merchant_sub + $sums_merchant_adv + 100;
+    // $sums_merchant_collection= $sums_merchant_collection+ $merchant_collections;
+    // // echo  $sums_merchant_collection . "<br>";
+    // $data[]=[
+    //     'Collection' =>  $sums_merchant_collection,
+    // ];
+   
+}
+    // $name = $emps->name;
+    $data[]=[
+        'Name' => $emps->name,
+            'Collection' =>  $sums_merchant_collection,
+            'Sub' =>   $sums_merchant_sub,
+            //'totalsum'=>  $total_sum
+    ];
+    $sums_merchant_collection=0;
+    $sums_merchant_sub=0;
+
+    
+}
+// foreach ($data as  $names) {
+    
+//     // echo "Name :" . $->name ."<br>";
+//    echo  $names;
+//     // echo "Collection : $data->Collection <br>";
+// }
+// echo '<pre>'; print_r($data); echo '</pre>';
+foreach($data as $result) {
+    echo $result['Name'] ."<br>";
+    echo $result['Collection'] ."<br>";
+    echo $result['Sub'] ."<br>";
+    // echo $result['totalsum'] ."<br>";
+    
+}
+
+// echo $total_sum_collection ;
+$total_sum= 0;
+// echo $sums;
+//  dd($data);
+// print_r($name);
+$sum=0;
+$total =0;
+$total_advertize=0;
+$total_collection = 0;
+$record =[];
+foreach( $table  as $tables){
+    $record = DB::table('merchant_payments')
+->where('merchant_id',$tables->id)
+->where('type', 'registration')
+// ->whereDate('created_at', '>=', $from_date)
+// ->whereDate('created_at', '<=', $to_date)
+->get();
+    $merchant_collection = DB::table('merchant_payments')
+                    ->where('merchant_id',$tables->id)
+                    ->where('type', 'registration')
+                    // ->whereDate('created_at', '>=', $from_date)
+                    // ->whereDate('created_at', '<=', $to_date)
+                    ->sum('amount');
+                    
+                    $merchant_collection_Sub = DB::table('merchant_payments')
+                    ->where('merchant_id',$tables->id)
+                    ->where('type', 'subscription')
+                    // ->whereDate('created_at', '>=', $from_date)
+                    // ->whereDate('created_at', '<=', $to_date)
+                    ->sum('amount');
+                    $adverise_collection_block_total = DB::table('merchant_payments')
+                    ->where('merchant_id',  $tables->id)
+                    ->where('type', 'advertise')
+                    // ->whereDate('created_at', '>=', $from_date)
+                    // ->whereDate('created_at', '<=', $to_date)
+                    ->sum('amount');
+
+                    // dd($merchant);
+                    // $merchant_collection +=  $merchant_collection + 0;
+                    $sum= $sum+ $merchant_collection;
+                    $total += $merchant_collection_Sub;
+                    $total_advertize += $adverise_collection_block_total;
+
+                    $total_collection =    $sum + $total + 0 + $total_advertize;
+                    // echo $merchant_collection . "<br>";
+
+                    // echo($record);
+                }
+          echo   "Total sum reg_collection =  $sum <br>";
+          echo   "Total sum sub_collection = $total <br>";
+          echo   "Total sum adv_collection = $total_advertize <br>";
+          echo   "Total sum total_collection = $total_collection <br>";
+                // dd($tables->id);
+ dd($emp);
+
+
+
     });
 
 

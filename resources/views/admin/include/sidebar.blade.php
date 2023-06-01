@@ -56,6 +56,18 @@ $page_name=$path[4];
                             <li class="nav-item">
                                 <a href="{{ url('/admin/megacategory') }}" class="nav-link {{$page_name=='megacategory'?'active':''}}" data-key="t-calendar"> Mega Category </a>
                             </li>
+                             <li class="nav-item">
+                                <a href="{{ url('/admin/Segment') }}" class="nav-link {{$page_name=='Segment'?'active':''}}" data-key="t-calendar"> Segment </a>
+                            </li>
+                            <li class="nav-item">
+                                <a href="{{ url('/admin/SubSegment') }}" class="nav-link {{$page_name=='SubSegment'?'active':''}}" data-key="t-calendar">Sub Segment </a>
+                            </li>
+                             <li class="nav-item">
+                                <a href="{{ url('/admin/Group') }}" class="nav-link {{$page_name=='Group'?'active':''}}" data-key="t-calendar">Group </a>
+                            </li>
+                               <li class="nav-item">
+                                <a href="{{ url('/admin/SubGroup') }}" class="nav-link {{$page_name=='SubGroup'?'active':''}}" data-key="t-calendar">Sub Group</a>
+                            </li>
                       </ul>
                     </div>
                 </li>
@@ -168,6 +180,11 @@ $page_name=$path[4];
                 <li class="nav-item">
                     <a class="nav-link {{$page_name=='teammember'?'active':''}}" href="{{ url('/admin/teammember') }}">
                         <i class="fa fa-users" aria-hidden="true"></i> <span data-key="t-dashboards">Team Member</span>
+                    </a>
+                </li> 
+                  <li class="nav-item">
+                    <a class="nav-link {{$page_name=='business-details'?'active':''}}" href="{{ url('/admin/business-details') }}">
+                        <i class="fa fa-users" aria-hidden="true"></i> <span data-key="t-dashboards">Business Details</span>
                     </a>
                 </li> 
                 

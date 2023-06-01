@@ -1,5 +1,5 @@
-@include("district-franchise.include.header");
-@include("district-franchise.include.sidebar");
+@include("admin.include.header");
+@include("admin.include.sidebar");
 @php
     $today = date('Y-m-d');
     $first_day = date('Y-m-01');
@@ -43,7 +43,7 @@
                               </div>
                               <thead>
                                 <tr>
-                                    <th scope="col">BlOCK NAME</th>
+                                    <th scope="col">ZONE NAME</th>
                                     <th scope="col">MERCHANT COLLECTIONS</th>
                                     <th scope="col">SUBSCRIPTION COLLECTION</th>
                                     <th scope="col">ADVERTERISE COLLECTIONS</th>
@@ -53,9 +53,11 @@
                                     <th scope="col">NET COLLECTIONS</th>
                                     <th scope="col">EMPLOYEE COM.</th>
                                     <th scope="col">BLOCK COM</th>
+                                    <th scope="col">DISTRICT COM</th>
+                                    <th scope="col">ZONE COM</th>
                                 </tr>
                               </thead>
-                              <tbody id="Distric_business_collection">
+                              <tbody id="Admin_business_collection">
                               </tbody>
                         </table>
                      </div>   
@@ -113,6 +115,7 @@
                                         <p id="total_collection_by_EMPLOYEE_COM"></p>
                                     </div>
                                   </div>
+                                  
                                     <div class="col-md-3 mt-2">
                                       <div style="border: 1px solid #000;text-align: center;">
                                           <h5 style="background: #a80cad;padding: 10px;color: #fcf9fa">Block Commission
@@ -120,6 +123,20 @@
                                           <p id="total_collection_by_Block_Commission"></p>
                                       </div>
                                     </div>
+                                      <div class="col-md-3 mt-2">
+                                        <div style="border: 1px solid #000;text-align: center;">
+                                            <h5 style="background: #a80cad;padding: 10px;color: #fcf9fa">Distric Commission
+                                            </h5>
+                                            <p id="total_collection_by_Distric_Commission"></p>
+                                        </div>
+                                      </div>
+                                        <div class="col-md-3 mt-2">
+                                          <div style="border: 1px solid #000;text-align: center;">
+                                              <h5 style="background: #a80cad;padding: 10px;color: #fcf9fa">Zone Commission
+                                              </h5>
+                                              <p id="total_collection_by_Zone_Commission"></p>
+                                          </div>
+                                        </div>
                                   <div class="col-md-3 mt-2">
                                     <div style="border: 1px solid #000;text-align: center;">
                                         <h5 style="background: #fabf8f;padding: 10px;color: #000">Total GST Amount</h5>
@@ -148,7 +165,7 @@
                                   </div>
                                   <div class="col-md-3 mt-2">
                                     <div style="border: 1px solid #000;text-align: center;">
-                                        <h5 style="background: #0070c0;padding: 10px;color: #fff;">Wallet Balance</h5>
+                                        <h5 style="background: #0070c0;padding: 10px;color: #fff;">Company Wallet</h5>
                                         <p id="wallet_balance"></p>
                                     </div>
                                   </div>
@@ -159,9 +176,9 @@
                                     </div>
                                   </div>
                               </div>
-                              <div class="text-center mt-4">
+                              {{-- <div class="text-center mt-4">
                                   <a href="" class="btn btn-lg btn-sucess" style="background: green;color: #fff;">Withdrawl Now</a>
-                              </div>
+                              </div> --}}
                             </div>
                           </div> <!-- container-fluid -->  
                      </div><!-- End Page-content -->
@@ -170,7 +187,9 @@
        
 
 
- @include("district-franchise.include.footer");
+                @include("admin.include.footer");
+
+
 
 <script>
       $(document).ready(function(e){
@@ -187,7 +206,7 @@
            let from_date = $('#from_date').val();
            let to_date = $('#to_date').val();
                 $.ajax({
-                    url:"{{ url('/district-franchise/generate-report') }}",
+                    url:"{{ url('/admin/generate-report') }}",
                     type:'Get',
                     data:{
                       _token: "{{ csrf_token() }}",
@@ -205,7 +224,7 @@
                         let row = '';
                         let total_row = '';
 
-                        $('#Distric_business_collection').empty();
+                        $('#Admin_business_collection').empty();
                        
                         if(merchants.length > 0){
                           merchants.forEach((item, index) => {
@@ -219,11 +238,13 @@
                                        '<td>' + item.gst + '</td>' + 
                                        '<td>' + item.net_collection + '</td>' + 
                                        '<td>' +item.Employee_Com+ '</td>' + 
-                                        '<td>' +item.Block_Com+ '</td>' + 
+                                       '<td>' +item.Block_Com+ '</td>' + 
+                                       '<td>' +item.Distric_Com+ '</td>' + 
+                                       '<td>' +item.Zone_Com+ '</td>' + 
                                        '</tr>'; 
                                       });
                                       
-                                      $('#Distric_business_collection').append(row);
+                                      $('#Admin_business_collection').append(row);
                                       
                                       total_row = '<tr>' + 
                                         '<th scope="row">Total ' + total_estimation.total_block + '</th>' + 
@@ -236,9 +257,11 @@
                                         '<td>' + total_estimation.total_net_collection_by_merchants + '</td>' + 
                                         '<td>' + total_estimation.total_collection_by_EMPLOYEE_COM + '</td>' +  
                                         '<td>' + total_estimation.total_collection_by_BlOCK_COM + '</td>' +  
+                                        '<td>' + total_estimation.total_collection_by_Distric_COM + '</td>' +  
+                                        '<td>' + total_estimation.total_collection_by_Zone_COM + '</td>' +  
                                        '</tr>'; 
                           
-                            $('#Distric_business_collection').append(total_row);
+                            $('#Admin_business_collection').append(total_row);
                             $("#total_collection_by_merchants").text(total_estimation.total_collection_by_merchants);
                             $("#total_subscription_collection_by_merchants").text(total_estimation.total_subscription_collection_by_merchants);
                             $("#total_advertise_collection_by_merchants").text(total_estimation.total_advertise_collection_by_merchants);
@@ -248,6 +271,8 @@
                             $("#total_net_collection_by_merchants").text(total_estimation.total_net_collection_by_merchants);
                             $("#total_collection_by_EMPLOYEE_COM").text(total_estimation.total_collection_by_EMPLOYEE_COM);
                             $("#total_collection_by_Block_Commission").text(total_estimation.total_collection_by_BlOCK_COM);
+                            $("#total_collection_by_Distric_Commission").text(total_estimation.total_collection_by_Distric_COM);
+                            $("#total_collection_by_Zone_Commission").text(total_estimation.total_collection_by_Zone_COM);
                             $("#total_earnings").text(total_earnings);
                             $("#bonus").text(bonus);
                             $("#wallet_balance").text(wallet_balance);

@@ -1,5 +1,5 @@
-@include("zonal-franchise.include.header")
-@include("zonal-franchise.include.sidebar")
+@include("zonal-franchise.include.header");
+@include("zonal-franchise.include.sidebar");
 @php
     $today = date('Y-m-d');
     $first_day = date('Y-m-01');
@@ -8,7 +8,7 @@
 <link href="{{ asset('dashboard_assets/css/employee_business_details.css')}}" rel="stylesheet" type="text/css" />
 
         <!-- Vertical Overlay-->
-        {{-- <div id="spinner_loader"></div> --}}
+        <div id="spinner_loader"></div>
         <div class="vertical-overlay"></div>
 
                 <!-- ============================================================== -->
@@ -43,7 +43,7 @@
                               </div>
                               <thead>
                                 <tr>
-                                    <th scope="col">MERCHANT NAME</th>
+                                    <th scope="col">DISTRIC NAME</th>
                                     <th scope="col">MERCHANT COLLECTIONS</th>
                                     <th scope="col">SUBSCRIPTION COLLECTION</th>
                                     <th scope="col">ADVERTERISE COLLECTIONS</th>
@@ -51,9 +51,12 @@
                                     <th scope="col">TOTAL COLLECTION</th>
                                     <th scope="col">GST</th>
                                     <th scope="col">NET COLLECTIONS</th>
+                                    <th scope="col">EMPLOYEE COM.</th>
+                                    <th scope="col">BLOCK COM</th>
+                                    <th scope="col">DISTRICT COM</th>
                                 </tr>
                               </thead>
-                              <tbody id="employee_business_collection">
+                              <tbody id="Zonal_business_collection">
                               </tbody>
                         </table>
                      </div>   
@@ -106,6 +109,28 @@
                                   </div>
                                   <div class="col-md-3 mt-2">
                                     <div style="border: 1px solid #000;text-align: center;">
+                                        <h5 style="background: #a80cad;padding: 10px;color: #fcf9fa">Employee Commission
+                                        </h5>
+                                        <p id="total_collection_by_EMPLOYEE_COM"></p>
+                                    </div>
+                                  </div>
+                                    <div class="col-md-3 mt-2">
+                                      <div style="border: 1px solid #000;text-align: center;">
+                                          <h5 style="background: #a80cad;padding: 10px;color: #fcf9fa">Block Commission
+                                          </h5>
+                                          <p id="total_collection_by_Block_Commission"></p>
+                                      </div>
+                                    </div>
+                                      <div class="col-md-3 mt-2">
+                                        <div style="border: 1px solid #000;text-align: center;">
+                                            <h5 style="background: #a80cad;padding: 10px;color: #fcf9fa">Distric Commission
+                                            </h5>
+                                            <p id="total_collection_by_Distric_Commission"></p>
+                                        </div>
+                                      </div>
+
+                                  <div class="col-md-3 mt-2">
+                                    <div style="border: 1px solid #000;text-align: center;">
                                         <h5 style="background: #fabf8f;padding: 10px;color: #000">Total GST Amount</h5>
                                         <p id="total_gst_by_merchants"></p>
                                     </div>
@@ -155,6 +180,8 @@
 
 
                 @include("zonal-franchise.include.footer");
+
+
 <script>
       $(document).ready(function(e){
         generateReport();
@@ -170,8 +197,8 @@
            let from_date = $('#from_date').val();
            let to_date = $('#to_date').val();
                 $.ajax({
-                    url:"{{ url('employee/generate-report') }}",
-                    type:'POST',
+                    url:"{{ url('/zonal-franchise/generate-report') }}",
+                    type:'Get',
                     data:{
                       _token: "{{ csrf_token() }}",
                       from_date: from_date,
@@ -188,7 +215,7 @@
                         let row = '';
                         let total_row = '';
 
-                        $('#employee_business_collection').empty();
+                        $('#Zonal_business_collection').empty();
                        
                         if(merchants.length > 0){
                           merchants.forEach((item, index) => {
@@ -201,23 +228,29 @@
                                        '<td>' + item.total_collection + '</td>' + 
                                        '<td>' + item.gst + '</td>' + 
                                        '<td>' + item.net_collection + '</td>' + 
+                                       '<td>' +item.Employee_Com+ '</td>' + 
+                                       '<td>' +item.Block_Com+ '</td>' + 
+                                       '<td>' +item.Distric_Com+ '</td>' + 
                                        '</tr>'; 
-                            });
-
-                            $('#employee_business_collection').append(row);
-
-                            total_row = '<tr>' + 
-                                       '<th scope="row">Total ' + total_estimation.total_merchant + '</th>' + 
-                                       '<td>' + total_estimation.total_collection_by_merchants + '</td>' + 
-                                       '<td>' + total_estimation.total_subscription_collection_by_merchants + '</td>' + 
-                                       '<td>' + total_estimation.total_advertise_collection_by_merchants + '</td>' + 
-                                       '<td>' + total_estimation.total_other_collection_by_merchants + '</td>' + 
-                                       '<td>' + total_estimation.all_total_collection_by_merchants + '</td>' + 
-                                       '<td>' + total_estimation.total_gst_by_merchants + '</td>' + 
-                                       '<td>' + total_estimation.total_net_collection_by_merchants + '</td>' + 
+                                      });
+                                      
+                                      $('#Zonal_business_collection').append(row);
+                                      
+                                      total_row = '<tr>' + 
+                                        '<th scope="row">Total ' + total_estimation.total_block + '</th>' + 
+                                        '<td>' + total_estimation.total_collection_by_merchants + '</td>' + 
+                                        '<td>' + total_estimation.total_subscription_collection_by_merchants + '</td>' + 
+                                        '<td>' + total_estimation.total_advertise_collection_by_merchants + '</td>' + 
+                                        '<td>' + total_estimation.total_other_collection_by_merchants + '</td>' + 
+                                        '<td>' + total_estimation.all_total_collection_by_merchants + '</td>' + 
+                                        '<td>' + total_estimation.total_gst_by_merchants + '</td>' + 
+                                        '<td>' + total_estimation.total_net_collection_by_merchants + '</td>' + 
+                                        '<td>' + total_estimation.total_collection_by_EMPLOYEE_COM + '</td>' +  
+                                        '<td>' + total_estimation.total_collection_by_BlOCK_COM + '</td>' +  
+                                        '<td>' + total_estimation.total_collection_by_Distric_COM + '</td>' +  
                                        '</tr>'; 
                           
-                            $('#employee_business_collection').append(total_row);
+                            $('#Zonal_business_collection').append(total_row);
                             $("#total_collection_by_merchants").text(total_estimation.total_collection_by_merchants);
                             $("#total_subscription_collection_by_merchants").text(total_estimation.total_subscription_collection_by_merchants);
                             $("#total_advertise_collection_by_merchants").text(total_estimation.total_advertise_collection_by_merchants);
@@ -225,6 +258,9 @@
                             $("#all_total_collection_by_merchants").text(total_estimation.all_total_collection_by_merchants);
                             $("#total_gst_by_merchants").text(total_estimation.total_gst_by_merchants);
                             $("#total_net_collection_by_merchants").text(total_estimation.total_net_collection_by_merchants);
+                            $("#total_collection_by_EMPLOYEE_COM").text(total_estimation.total_collection_by_EMPLOYEE_COM);
+                            $("#total_collection_by_Block_Commission").text(total_estimation.total_collection_by_BlOCK_COM);
+                            $("#total_collection_by_Distric_Commission").text(total_estimation.total_collection_by_Distric_COM);
                             $("#total_earnings").text(total_earnings);
                             $("#bonus").text(bonus);
                             $("#wallet_balance").text(wallet_balance);

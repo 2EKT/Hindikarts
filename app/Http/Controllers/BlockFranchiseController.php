@@ -445,12 +445,12 @@ class BlockFranchiseController extends Controller
         $other_collection = 0;
         $other_collection = $this->twoDecimalPoint($other_collection);
 
-        $all_merchants = [];
+        $all_Empolyees = [];
         // $employee= 
         // $query = DB::table('employees')->where('block_partner_id', $block_id);
         $query = DB::table('employees')->where('block_partner_id', $block_id);
 
-        $merchants = $query->get();
+        $Empolyees = $query->get();
         $total_block = $query->count();
 
 
@@ -471,8 +471,8 @@ class BlockFranchiseController extends Controller
         $total_Sum_subscription_collection = 0;
         $total_Sum_adverise_collection = 0;
 
-        foreach ($merchants as $merchant) {
-            $merchant_id = DB::table('merchants')->where('employer_id', $merchant->id)->get();
+        foreach ($Empolyees as $Empolyee) {
+            $merchant_id = DB::table('merchants')->where('employer_id', $Empolyee->id)->get();
             foreach ($merchant_id  as  $merchant_ids) {
 
                 //   echo $merchant_ids->id ."<br>";
@@ -515,7 +515,7 @@ class BlockFranchiseController extends Controller
                 $EMPLOYEE_COM = $this->twoDecimalPoint($EMPLOYEE_COM);
                 $total_Sum_Merchant_collection = $this->twoDecimalPoint($total_Sum_Merchant_collection);
                 $total_Sum_subscription_collection = $this->twoDecimalPoint($total_Sum_subscription_collection);
-                $adverise_collection = $this->twoDecimalPoint($adverise_collection);
+                $total_Sum_adverise_collection = $this->twoDecimalPoint($total_Sum_adverise_collection);
                 $total_collection = $this->twoDecimalPoint($total_collection);
                 $gst = $this->twoDecimalPoint($gst);
                 $net_collection = $this->twoDecimalPoint($net_collection);
@@ -523,11 +523,11 @@ class BlockFranchiseController extends Controller
 
 
 
-                $wallet_balance = $this->twoDecimalPoint($merchant->wallet_balance);
+                $wallet_balance = $this->twoDecimalPoint($Empolyee->wallet_balance);
             }
-            //  echo $merchant->name;
-            $all_merchants[] = [
-                "name" => $merchant->name,
+            //  echo $Empolyee->name;
+            $all_Empolyees[] = [
+                "name" => $Empolyee->name,
                 "merchant_collection" => $total_Sum_Merchant_collection,
                 "subscription_collection" =>  $total_Sum_subscription_collection,
                 "adverise_collection" => $total_Sum_adverise_collection,
@@ -549,7 +549,7 @@ class BlockFranchiseController extends Controller
         $total_collection_Grand = 0;
         $Grand_gsts = 0;
         $Grand_net_collection = 0;
-        $G_EMPLOYEE_COMs = 0;
+        // $G_EMPLOYEE_COMs = 0;
         $Total_other_collection =0;
         foreach ($table  as $tables) {
 
@@ -608,7 +608,7 @@ class BlockFranchiseController extends Controller
         }
 
         $data = [
-            "merchants" => $all_merchants,
+            "merchants" => $all_Empolyees,
             "total_estimation" => (object) [
                 "total_block" =>  $total_block,
                 "total_collection_by_merchants" => $total_merchant_Collection_sum,
