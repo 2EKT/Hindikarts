@@ -25,6 +25,10 @@ use App\Http\Controllers\CategorybannerController;
 use App\Http\Controllers\ClientReviewController;
 use App\Http\Controllers\SubcategoryController;
 use App\Http\Controllers\MegacategoryController;
+use App\Http\Controllers\SegmentController;
+use App\Http\Controllers\SubSegmentController;
+use App\Http\Controllers\GroupController;
+use App\Http\Controllers\SubGroupController;
 use App\Http\Controllers\TeamMemberController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\MonthlyfeeController;
@@ -70,7 +74,22 @@ Route::controller(HomeController::class)->group(function(){
 // Frontend Routes End Here..........................................
 
 
+Route::post('/user/register', [UserController::class , 'newuser']);
+Route::post('/user/loging', [UserController::class , 'login']);
+Route::get('/user/logout', [UserController::class , 'logout']);
+Route::get('/user/cart', [UserController::class , 'cart']);
+Route::get('Qunantiy/update', [UserController::class , 'change_qnty']);
+Route::get('product/del', [UserController::class , 'delete_product_cart']);
+Route::get('user/addcart', [UserController::class , 'AddToCart']);
+Route::get('user/BuyNow', [UserController::class , 'AddBuy']);
 
+
+Route::view('/Product/Show/{id}','Shoping_Store.Product');
+
+Route::view('/shoping','Shoping_Store.index');
+Route::view('/addcart','Shoping_Store.cart');
+Route::view('/Checkout/{id}','Shoping_Store.Check.out');
+Route::view('/product/{id}','Shoping_Store.Single_product');
 
 
 // Admin Routes Start Here################################################
@@ -96,7 +115,12 @@ Route::group(['middleware'=>'admin'],function(){
     Route::resource('/admin/category', CategoryController::class);
     Route::resource('/admin/subcategory', SubcategoryController::class);
      Route::resource('/admin/megacategory', MegacategoryController::class);
-    Route::post('/admin/get_subcategory', [MegacategoryController::class,'get_subcategory']);
+     Route::post('/admin/get_subcategory', [MegacategoryController::class,'get_subcategory']);
+     
+     Route::resource('/admin/Segment', SegmentController::class);
+     Route::post('/admin/Segment/get_subcategory', [SegmentController::class,'get_subcategory']);
+     Route::post('/admin/Segment/get_megacategory', [SegmentController::class,'get_megacategory']);
+
     Route::resource('/admin/zone', ZoneController::class);
     Route::resource('/admin/zonepartner', ZonepartnerController::class);
 
@@ -437,8 +461,8 @@ Route::get('/Reg_admin',function(){
     Route::get('/beast',function(){
    // $Cache= Cache::flush();
 // dd($Cache);
-echo $emp =DB::table('blockpartners')->count();
-exit();
+ $emp =DB::table('blockpartners')->get();
+// exit();
 // $table =DB::table('merchants')->where('employer_id' , $table->id)->get();
 // $table =DB::table('merchant_payments')->where('merchant_id' , )->first();
 $table =DB::table('merchants')->where('district_partner_id' , 2)->get();
@@ -718,4 +742,20 @@ foreach( $table  as $tables){
 
 
 
+   });
+
+   Route::get('date', function(){
+//  $date1 =new Datetime('4-6-2023');
+//  $date2 =new Datetime('4-6-2023');
+//     // $date2=  date('4-6-2023');
+//     $Result = $date1-$date2;
+
+$product = DB::table('products')->where('created_at', '>', Carbon\Carbon::now()->subDay()->toDateTimeString())->get();
+$now =Carbon\Carbon::now()->toDateTimeString();
+$Carbon=Carbon\Carbon::now()->subSecond(10)->toDateTimeString();
+echo "now =  $now  <br> old $Carbon";
+dd($product);
+
+ //    echo  date('4-6-2023');
+ // echo  $date1->format('d-m-y');
    });

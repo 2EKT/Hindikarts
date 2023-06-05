@@ -41,6 +41,9 @@
                     <a class="nav-link" href="{{ URL('/about-us') }}">about us</a>
                 </li>
                 <li class="nav-item">
+                    <a class="nav-link" href="{{ URL('/shoping') }}">Shoping</a>
+                </li>
+                <li class="nav-item">
                     <a class="nav-link" href="{{ URL('/mission') }}">mission</a>
                 </li>
                 <li class="nav-item">

@@ -60,7 +60,7 @@
                                             <label for="placeholderInput" class="form-label">Subcategory Name*</label>
                                             <select class="form-control" name="subcat_id" id="subcat_id" required>
                                                 @php
-                                                $subcategory_row=DB::table('subcategories')->where('id','=',$megacategory->subcat_id)->get();
+                                                $subcategory_row=DB::table('subcategories')->where('cat_id','=',$megacategory->cat_id)->get();
                                                 @endphp
                                                 @foreach ($subcategory_row as $subcategory_details)
                                                 <option value="{{ $subcategory_details->id }}" {{ $megacategory->subcat_id==$subcategory_details->id?'selected':'' }}>{{ $subcategory_details->subcategory }}</option>
@@ -70,8 +70,8 @@
                                     </div>
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
-                                            <label for="placeholderInput" class="form-label">Mega Category Name*</label>
-                                            <input type="text" class="form-control" name="megacategory" placeholder="Mega Category Name" value="{{ $megacategory->megacategory }}" required>
+                                            <label for="placeholderInput" class="form-label">Group Name*</label>
+                                            <input type="text" class="form-control" name="megacategory" placeholder="Group Name" value="{{ $megacategory->megacategory }}" required>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-md-6">

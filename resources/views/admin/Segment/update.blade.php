@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header align-items-center d-flex">
-    <h4 class="card-title mb-0 flex-grow-1">Update Megacategory</h4>
+    <h4 class="card-title mb-0 flex-grow-1">Update Segment</h4>
     @if(session()->has('success'))
         <div class="alert alert-secondary alert-dismissible alert-solid alert-label-icon fade show" role="alert">
             <i class="ri-check-double-line label-icon"></i><strong>Success</strong> - {{ session()->get('success') }}
@@ -37,7 +37,7 @@
                         </div><!-- end card header -->
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{url('/admin/megacategory/'.$megacategory->id)}}" method="POST" enctype="multipart/form-data">
+                                <form action="{{url('/admin/Segment/'.$Segment->id)}}" method="POST" enctype="multipart/form-data">
                                     {{ method_field('PATCH') }}
                                     @csrf
                                 <div class="row gy-4">
@@ -50,7 +50,7 @@
                                                 $cat_row=DB::table('categories')->get();
                                                 @endphp
                                                 @foreach ($cat_row as $cat_details)
-                                                <option value="{{ $cat_details->id }}" {{ $megacategory->cat_id==$cat_details->id?'selected':'' }}>{{ $cat_details->category }}</option>
+                                                <option value="{{ $cat_details->id }}" {{ $Segment->cat_id==$cat_details->id?'selected':'' }}>{{ $cat_details->category }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -60,25 +60,38 @@
                                             <label for="placeholderInput" class="form-label">Subcategory Name*</label>
                                             <select class="form-control" name="subcat_id" id="subcat_id" required>
                                                 @php
-                                                $subcategory_row=DB::table('subcategories')->where('id','=',$megacategory->subcat_id)->get();
+                                                $subcategory_row=DB::table('subcategories')->where('id','=',$Segment->subcat_id)->get();
                                                 @endphp
                                                 @foreach ($subcategory_row as $subcategory_details)
-                                                <option value="{{ $subcategory_details->id }}" {{ $megacategory->subcat_id==$subcategory_details->id?'selected':'' }}>{{ $subcategory_details->subcategory }}</option>
+                                                <option value="{{ $subcategory_details->id }}" {{ $Segment->subcat_id==$subcategory_details->id?'selected':'' }}>{{ $subcategory_details->subcategory }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
-                                            <label for="placeholderInput" class="form-label">Mega Category Name*</label>
-                                            <input type="text" class="form-control" name="megacategory" placeholder="Mega Category Name" value="{{ $megacategory->megacategory }}" required>
+                                            <label for="placeholderInput" class="form-label">Subcategory Name*</label>
+                                            <select class="form-control" name="megacategory" id="Megcat_id" required>
+                                                @php
+                                                $megacategory_row=DB::table('megacategories')->where('id','=',$Segment->megacategory_id)->get();
+                                                @endphp
+                                                @foreach ($megacategory_row as $megacategory_row_details)
+                                                <option value="{{ $megacategory_row_details->id }}" {{ $Segment->subcat_id==$megacategory_row_details->id?'selected':'' }}>{{ $megacategory_row_details->megacategory}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-md-6">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">Segment Name*</label>
+                                            <input type="text" class="form-control" name="Segment" placeholder="Segment Name" value="{{ $Segment->Segment }}" required>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
                                             <label for="placeholderInput" class="form-label">Image</label>
                                             <input type="file" class="form-control" name="image">
-                                            <input type="hidden" class="form-control" name="previous_image" value="{{ $megacategory->image }}">
+                                            <input type="hidden" class="form-control" name="previous_image" value="{{ $Segment->image }}">
                                             <span style="color:red;">Max image size 1000kb</span>
                                         </div>
                                     </div>
@@ -113,12 +126,31 @@
             // alert(category);
             $("#subcat_id").html("<option value=''>Select Subcategory</option>");
                 $.ajax({
-                    url:"{{ url('admin/get_subcategory') }}",
+                    url:"{{ url('admin/Segment/get_subcategory') }}",
                     type:'post',
                     data:'category='+category+'&_token={{ csrf_token() }}',
                     success:function(data){
                           $("#subcat_id").append(data);
                     }
                   });
-        })
+                  
+               
+                  
+        });
+        $("#subcat_id").on('change',function(){
+            let category=$(this).val();
+            // alert(category);
+            $("#Megcat_id").html("<option value=''>Select Megacategory</option>");
+                  $.ajax({
+                    url:"{{ url('admin/Segment/get_megacategory') }}",
+                    type:'post',
+                    data:'category='+category+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#Megcat_id").append(data);
+                    }
+                  });
+                  
+               
+                  
+        });
 </script>

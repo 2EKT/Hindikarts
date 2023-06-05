@@ -184,7 +184,7 @@ $page_name=$path[4];
                 </li> 
                   <li class="nav-item">
                     <a class="nav-link {{$page_name=='business-details'?'active':''}}" href="{{ url('/admin/business-details') }}">
-                        <i class="fa fa-users" aria-hidden="true"></i> <span data-key="t-dashboards">Business Details</span>
+                        <i class="fa fa-file-text-o" aria-hidden="true"></i> <span data-key="t-dashboards">Business Details</span>
                     </a>
                 </li> 
                 
