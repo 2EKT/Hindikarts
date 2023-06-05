@@ -197,7 +197,7 @@
                 </form> --}}
                 <div class="checkout-right-basket">
                     @if($Amount>0)
-                    <a href="{{url('/Checkout'.$Amount)}}">Buy Now
+                    <a href="{{url('/Checkout'.$Amount)}}">Go Check Out
                         <span class="far fa-hand-point-right"></span>
                     </a>
                     @endif

@@ -167,7 +167,7 @@
                                                 data-quantity="1"
                                                     role="button">Add to cart </a>
                                                     
-                                              <a class="btn btn-danger btn-lg mt-3 Buy" href="javascript:void(0)"
+                                              <a class="btn btn-danger btn-lg mt-3 " href="{{url('/Checkout/'.$data->market_price)}}"
                                                     role="button">Buy Now </a>
                                                     @endauth
                                                     @guest('web')

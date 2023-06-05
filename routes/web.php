@@ -88,7 +88,7 @@ Route::view('/Product/Show/{id}','Shoping_Store.Product');
 
 Route::view('/shoping','Shoping_Store.index');
 Route::view('/addcart','Shoping_Store.cart');
-Route::view('/Checkout/{id}','Shoping_Store.Check.out');
+Route::view('/Checkout/{id}','Shoping_Store.Checkout');
 Route::view('/product/{id}','Shoping_Store.Single_product');
 
 
