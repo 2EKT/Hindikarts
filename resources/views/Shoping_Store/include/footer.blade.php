@@ -2,13 +2,10 @@
     <div class="footer-top-first">
         <div class="container py-md-5 py-sm-4 py-3">
             <!-- footer first section -->
-            <h2 class="footer-top-head-w3l font-weight-bold mb-2">Electronics :</h2>
+            <h2 class="footer-top-head-w3l font-weight-bold mb-2"> HINDKART</h2>
             <p class="footer-main mb-4">
-                If you're considering a new laptop, looking for a powerful new car stereo or shopping for a new
-                HDTV, we make it easy to
-                find exactly what you need at a price you can afford. We offer Every Day Low Prices on TVs, laptops,
-                cell phones, tablets
-                and iPads, video games, desktop computers, cameras and camcorders, audio, video and more.</p>
+               
+                Hindkart is a multi vendor platform where you can promotion, sell and purchase any product and service from your nearest marketplace.we help our clients solve their business challenges through digital transformation.The Company brings a wide range digital marketing solutions like e-commerce, Courier Service,Doorstep services,Transportation and medical service.We are committed to helping startups, medium and small business owner in digital marketing, leads provide and introduce their product services to the customer with product and delivery, payment</p>
             <!-- //footer first section -->
             <!-- footer second section -->
             <div class="row w3l-grids-footer border-top border-bottom py-sm-4 py-3">
@@ -128,13 +125,13 @@
                     <!-- newsletter -->
                     <h3 class="text-white font-weight-bold mb-3">Newsletter</h3>
                     <p class="mb-3">Free Delivery on your first order!</p>
-                    <form action="#" method="post">
+                    {{-- <form action="#" method="post">
                         <div class="form-group">
                             <input type="email" class="form-control" placeholder="Email" name="email"
                                 required="">
                             <input type="submit" value="Go">
                         </div>
-                    </form>
+                    </form> --}}
                     <!-- //newsletter -->
                     <!-- social icons -->
                     <div class="footer-grids  w3l-socialmk mt-3">
@@ -414,6 +411,7 @@
     </div> --}}
     <!-- //footer fourth section (text) -->
 </footer>
+
 <!-- //footer -->
 <!-- copyright -->
 <div class="copy-right py-3">
@@ -429,6 +427,11 @@
 <!-- jquery -->
 <script src="{{ asset('shoping_kart/js/jquery-2.2.3.min.js') }}"></script>
 <!-- //jquery -->
+<!--Sweet alert-->
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<!--//Sweet alert-->
+
 
 <!-- nav smooth scroll -->
 <script>
@@ -565,18 +568,44 @@
 
     @if ($errors->any())
 
-        alert('{{ implode('', $errors->all()) }}');
+        // alert('');
+        Swal.fire({
+  icon: 'error',
+  title: 'Error',
+  text: '{{ implode('', $errors->all()) }}',
+ // footer: '<a href="">Why do I have this issue?</a>'
+})
+        
     @endif
     @if (Session::has('success'))
-        alert('{{ Session::get('success') }}');
+      // alert('');
+        Swal.fire({
+//   position: 'top-end',
+  icon: 'success',
+  title: '{{ Session::get('success') }}',
+  showConfirmButton: false,
+  timer: 1500
+})
     @endif 
     @if (Session::has('error'))
-        alert('{{ Session::get('error') }}');
+        // alert('');
+        Swal.fire({
+  icon: 'error',
+  title: 'Error',
+  text: '{{ Session::get('error') }}',
+  footer: '<a href="#" data-toggle="modal" data-target="#exampleModal">Login Again </a>'
+})
     @endif
 </script>
 <script>
     function login(){
- alert("Please Login First")
+//  alert("Please Login First")
+Swal.fire({
+  icon: 'error',
+  title: 'Error',
+  text: 'Please Login First',
+ // footer: '<a href="">Why do I have this issue?</a>'
+})
      }
      $(".cart").on('click', function() {
   
@@ -597,13 +626,33 @@
                 success: function (response) {
                     // if (response.ok) {
                 //   location.reload();
-                  alert(response.ok)
-            //   }elseif(response.error){
-                // alert(response.error)
-                location.reload();
-            //   }
+                //   alert()
+                let msg = response.ok;
+                let error = response.error;
+console.log(msg);
+console.log(error);
+
+           if(msg == undefined){
+                            Swal.fire({
+//   position: 'top-end',
+  icon: 'error',
+  title: error,
+  showConfirmButton: false,
+//   timer: 1500
+})
+           }else{
+                    Swal.fire({
+//   position: 'top-end',
+  icon: 'success',
+  title: msg,
+  showConfirmButton: false,
+//   timer: 1500
+})
+                }
+            
 
                 }
+           
             });
  //  alert(cart)
  // console.log(id + "\n user_id = "+ user_id + "\n price =  " + price + "\n qun= " + quantity );
@@ -654,8 +703,16 @@
                 },
                 // dataType: "dataType",
                 success: function (response) {
-                    location.reload();
-                    alert(response.ok)
+                    // location.reload();
+                    // alert(response.ok)
+                   let error = response.ok
+                    Swal.fire({
+//   position: 'top-end',
+  icon: 'success',
+  title: error,
+  showConfirmButton: false,
+//   timer: 1500
+})
                 }
             });
  //  alert(cart)
@@ -677,6 +734,42 @@
 			});
 		});
 	</script>
+    <script>
+        
+        $(".category").on('change', function(){ 
+           let value = $(this).val();
+        //    console.log(value);
+        //    console.log('Let me down');
+        $.ajax({
+            type: "Get",
+            url: "{{url('get/category')}}"+`/${value}`,
+           // data: "data",
+          //  dataType: "dataType",
+            success: function (data) {
+                 console.log(data)
+            //    let product = ok;
+            //  for (let index = 0; index < ok.length; index++) {
+            //     const element = product[index];
+            //          console.log(element.title);
+            //  }
+            // console.log(product.title);
+            
+       
+            
+            }
+        });
+           
+        })
+        $('.order').on('click',function(){
+            Swal.fire({
+//   position: 'top-end',
+  icon: 'success',
+  title: 'Order Confirm',
+  showConfirmButton: false,
+//   timer: 1500
+})
+        })
+    </script>
 </body>
 
 </html>

@@ -133,8 +133,8 @@
                         </div>
                         <div class="sub-w3l">
                             <div class="custom-control custom-checkbox mr-sm-2">
-                                <input type="checkbox" class="custom-control-input" id="customControlAutosizing">
-                                <label class="custom-control-label" for="customControlAutosizing">Remember me?</label>
+                                <input type="checkbox" class="custom-control-input"  name="remember" id="customControlAutosizing">
+                                <label class="custom-control-label"  for="customControlAutosizing">Remember me?</label>
                             </div>
                         </div>
                         <p class="text-center dont-do mt-3">Don't have an account?
@@ -228,14 +228,32 @@
                     </a>
                     {{-- </h1> --}}
                 </div>
+                @php
+                $categories = DB::table('categories')
+                    ->limit(4)
+                    ->get();
+                $category = DB::table('categories')->get();
+            @endphp
                 <!-- //logo -->
                 <!-- header-bot -->
                 <div class="col-md-9 header mt-4 mb-md-0 mb-4">
                     <div class="row">
                         <!-- search -->
+                        {{-- <div class="agileits-navi_search"> --}}
+                            {{-- <form action="{{url('Catagory/Change')}}" method="post"> --}}
+                                
+                            {{-- </form> --}}
+                        {{-- </div> --}}
                         <div class="col-10 agileits_search">
-                            <form class="form-inline" action="#" method="post">
-                                <input class="form-control mr-sm-2" type="search" placeholder="Search"
+                            <form class="form-inline" action="{{url('/Product/Search')}}" method="Get">
+                                <select id="agileinfo-nav_search" name="agileinfo_search" class="border category w-25 mr-2" >
+        
+                                    <option value="">All Categories</option>
+                                    @foreach ($category as $category)
+                                        <option class="option" value="{{ $category->id }}">{{ $category->category }}</option>
+                                    @endforeach
+                                </select>
+                                <input class="form-control mr-sm-2 w-50" name="Search"  type="search" placeholder="Search"
                                     aria-label="Search" required>
                                 <button class="btn my-2 my-sm-0" type="submit">Search</button>
                             </form>
@@ -269,27 +287,12 @@
             </div>
         </div>
     </div>
-    @php
-        $categories = DB::table('categories')
-            ->limit(5)
-            ->get();
-        $category = DB::table('categories')->get();
-    @endphp
+
 
     <div class="navbar-inner">
         <div class="container">
-            <nav class="navbar navbar-expand-lg navbar-light bg-light">
-                <div class="agileits-navi_search">
-                    <form action="#" method="post">
-                        <select id="agileinfo-nav_search" name="agileinfo_search" class="border" required="">
-
-                            <option value="">All Categories</option>
-                            @foreach ($category as $category)
-                                <option value="{{ $category->id }}">{{ $category->category }}</option>
-                            @endforeach
-                        </select>
-                    </form>
-                </div>
+            <nav class="navbar navbar-expand-lg navbar-light bg-light d-flex flex-column justify-content-center">
+                
                 <button class="navbar-toggler" type="button" data-toggle="collapse"
                     data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent"
                     aria-expanded="false" aria-label="Toggle navigation">
@@ -605,8 +608,11 @@
                                     {{ Auth::guard('web')->user()->name }}
                                 </a>
                                 <div class="dropdown-menu">
-                                    <a class="dropdown-item" href="/user/logout">logout</a>
+                                    <a class="dropdown-item" href="{{url('user/Account/Setting')}}">Account Setting</a>
+                                    <a class="dropdown-item" href="{{url('/user/logout')}}">logout</a>
                                 </div>
+                                {{-- <div class="dropdown-menu">
+                                </div> --}}
                             </li>
                             {{-- <li class="nav-item">
                             <a class="nav-link" href="contact.html">Contact Us</a>

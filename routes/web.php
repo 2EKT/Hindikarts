@@ -82,11 +82,15 @@ Route::get('Qunantiy/update', [UserController::class , 'change_qnty']);
 Route::get('product/del', [UserController::class , 'delete_product_cart']);
 Route::get('user/addcart', [UserController::class , 'AddToCart']);
 Route::get('user/BuyNow', [UserController::class , 'AddBuy']);
+Route::get('get/category/{id}', [UserController::class , 'getcategory']);
+Route::get('/Product/Search', [UserController::class , 'ProductSerach']);
+Route::post('user/update/profile', [UserController::class , 'Profile_Update']);
 
 
 Route::view('/Product/Show/{id}','Shoping_Store.Product');
 
 Route::view('/shoping','Shoping_Store.index');
+Route::view('/user/Account/Setting','Shoping_Store.Account_Setting');
 Route::view('/addcart','Shoping_Store.cart');
 Route::view('/Checkout/{id}','Shoping_Store.Checkout');
 Route::view('/product/{id}','Shoping_Store.Single_product');
@@ -120,6 +124,26 @@ Route::group(['middleware'=>'admin'],function(){
      Route::resource('/admin/Segment', SegmentController::class);
      Route::post('/admin/Segment/get_subcategory', [SegmentController::class,'get_subcategory']);
      Route::post('/admin/Segment/get_megacategory', [SegmentController::class,'get_megacategory']);
+
+     Route::resource('/admin/SubSegment', SubSegmentController::class);
+     Route::post('/admin/SubSegment/get_subcategory', [SubSegmentController::class,'get_subcategory']);
+     Route::post('/admin/SubSegment/get_megacategory', [SubSegmentController::class,'get_megacategory']);
+     Route::post('/admin/SubSegment/get_Segment', [SubSegmentController::class,'get_Segment']);
+
+
+     Route::resource('/admin/Group', GroupController::class);
+     Route::post('/admin/Group/get_subcategory', [GroupController::class,'get_subcategory']);
+     Route::post('/admin/Group/get_megacategory', [GroupController::class,'get_megacategory']);
+     Route::post('/admin/Group/get_Segment', [GroupController::class,'get_Segment']);
+     Route::post('admin/Group/get_SubSegment', [GroupController::class,'get_SubSegment']);
+
+
+     Route::resource('/admin/SubGroup', SubGroupController::class);
+     Route::post('/admin/SubGroup/get_subcategory', [SubGroupController::class,'get_subcategory']);
+     Route::post('/admin/SubGroup/get_megacategory', [SubGroupController::class,'get_megacategory']);
+     Route::post('/admin/SubGroup/get_Segment', [SubGroupController::class,'get_Segment']);
+     Route::post('/admin/SubGroup/get_SubSegment', [SubGroupController::class,'get_SubSegment']);
+     Route::post('/admin/SubGroup/get_Group', [SubGroupController::class,'get_Group']);
 
     Route::resource('/admin/zone', ZoneController::class);
     Route::resource('/admin/zonepartner', ZonepartnerController::class);
@@ -191,6 +215,8 @@ Route::group(['middleware'=>'admin'],function(){
     Route::post('/admin/clientreview/delete', [ClientReviewController::class, 'destroy']);
     
     Route::get('/admin/razorpay', [AdminController::class, 'razorpay']);
+    Route::get('admin/payment', [AdminController::class, 'payment']);
+    Route::post('/admin/offline/payment', [AdminController::class, 'payment_record']);
     Route::post('/admin/update_razorpay', [AdminController::class, 'update_razorpay']);
     
     Route::resource('/admin/monthlyfee', MonthlyfeeController::class);
@@ -375,6 +401,10 @@ Route::group(['middleware'=>'merchant'],function(){
     Route::resource('/merchant/product', ProductController::class);
     Route::post('/merchant/get_subcategory', [ProductController::class,'get_subcategory']);
     Route::post('/merchant/get_megacategory', [ProductController::class,'get_megacategory']);
+    Route::post('/merchant/get_Segment', [ProductController::class,'get_Segment']);
+    Route::post('/merchant/get_SubSegment', [ProductController::class,'get_SubSegment']);
+    Route::post('/merchant/get_Group', [ProductController::class,'get_Group']);
+    Route::post('/merchant/get_SubGroup', [ProductController::class,'get_SubGroup']);
     
     Route::get('/merchant/wallet', [MerchantFranchiseController::class,'wallet']);
     Route::post('/merchant/get_amount', [MerchantFranchiseController::class,'get_amount']);
@@ -460,9 +490,10 @@ Route::get('/Reg_admin',function(){
 
     Route::get('/beast',function(){
    // $Cache= Cache::flush();
+  
+//    exit();
 // dd($Cache);
  $emp =DB::table('blockpartners')->get();
-// exit();
 // $table =DB::table('merchants')->where('employer_id' , $table->id)->get();
 // $table =DB::table('merchant_payments')->where('merchant_id' , )->first();
 $table =DB::table('merchants')->where('district_partner_id' , 2)->get();

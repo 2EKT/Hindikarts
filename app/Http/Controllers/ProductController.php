@@ -192,9 +192,59 @@ class ProductController extends Controller
             
         }
     }
+    public function get_Segment(Request $request)
+    {
+        $get_Segment=$request->category;
+        $row=DB::table('segments')->where('megacategory_id','=',$get_Segment)->get();
+        
+        foreach($row as $details)
+        {
+            echo "<option value=".$details->id.">".$details->Segment."</option>";            
+            
+        }
+    } 
+    
+    public function get_SubSegment(Request $request)
+    {
+        $get_SubSegment=$request->category;
+        $row=DB::table('sub_segments')->where('Segment_id','=', $get_SubSegment)->get();
+        
+        foreach($row as $details)
+        {
+            echo "<option value=".$details->id.">".$details->SegmentSub."</option>";            
+        
+        }
+            // echo "<option value=2>SubSegmnet</option>";            
+    }
+    public function get_Group(Request $request)
+    {
+        $get_Group=$request->category;
+        $row=DB::table('groups')->where('SegmentSub_id','=', $get_Group)->get();
+        
+        foreach($row as $details)
+        {
+            echo "<option value=".$details->id.">".$details->Group."</option>";            
+        
+        }
+            // echo "<option value=2>SubSegmnet</option>";            
+    }
+    public function get_SubGroup(Request $request)
+    {
+        $get_Group=$request->category;
+        $row=DB::table('sub_groups')->where('Group_id','=', $get_Group)->get();
+        
+        foreach($row as $details)
+        {
+            echo "<option value=".$details->id.">".$details->Sub_Group."</option>";            
+        
+        }
+            //echo "<option value=2>SubGroupTest</option>";            
+    }
 
     public function store(Request $request)
     {
+        // dd($request->all());
+        // exit();
         $validated = $request->validate([
             'image' => 'required|image|mimes:jpg,png,jpeg,gif,svg,webp|max:1000',
         ]);
@@ -256,6 +306,10 @@ class ProductController extends Controller
                     'cat_id' => $request->cat_id,
                     'subcat_id' => $request->subcat_id,
                     'megacat_id' => $request->megacat_id,
+                    'Segment_id' => $request->Segment,
+                    'SubSegment_id' => $request->SubSegment,
+                    'Group_id' => $request->Group,
+                    'SubGroup_id' => $request->SubGroup,
                     'merchant_id' => $merchant_id,
                     'shop_id' => $request->shop_id,
                     'title' => $request->title,

@@ -121,7 +121,7 @@ $product_info = DB::table('products')
                     data-quantity="1"
                         role="button">Add to cart </a>
                         
-                  <a class="btn btn-danger btn-lg Buy" href="javascript:void(0)"
+                  <a class="btn btn-danger btn-lg " href="{{url('/Checkout/'.$product_info->market_price)}}"
                         role="button">Buy Now </a>
                         @endauth
                         @guest('web')

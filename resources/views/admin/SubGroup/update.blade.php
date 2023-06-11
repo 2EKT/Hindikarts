@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header align-items-center d-flex">
-    <h4 class="card-title mb-0 flex-grow-1">Update Group 1</h4>
+    <h4 class="card-title mb-0 flex-grow-1">Update Sub Group</h4>
     @if(session()->has('success'))
         <div class="alert alert-secondary alert-dismissible alert-solid alert-label-icon fade show" role="alert">
             <i class="ri-check-double-line label-icon"></i><strong>Success</strong> - {{ session()->get('success') }}
@@ -110,7 +110,20 @@
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
                                             <label for="placeholderInput" class="form-label">Group Name*</label>
-                                            <input type="text" class="form-control" name="Group" placeholder="Group Name" value="{{ $Group->Group }}" required>
+                                            <select class="form-control" name="Group" id="Group" required>
+                                                @php
+                                                $Group_row=DB::table('groups')->where('id','=',$Group->Group_id)->get();
+                                                @endphp
+                                                @foreach (  $Group_row as $Group_row_details)
+                                                <option value="{{ $Group_row_details->id }}" {{ $Group->Group_id==$Group_row_details->id?'selected':'' }}>{{$Group_row_details->SegmentSub}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-md-6">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">Sub Group Name*</label>
+                                            <input type="text" class="form-control" name="SubGroup" placeholder="Sub Group Name" value="{{ $Group->Group }}" required>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-md-6">
@@ -147,72 +160,89 @@
 @include("admin.include.footer");
 
 <script>
-$(document).ready(function(){
-    $("#cat_id").on('change',function(){
-            var category=$(this).val();
-            // alert(category);
-            $("#subcat_id").html("<option value=''>Select Subcategory</option>");
-                $.ajax({
-                    url:"{{ url('admin/Group/get_subcategory') }}",
-                    type:'post',
-                    data:'category='+category+'&_token={{ csrf_token() }}',
-                    success:function(data){
-                          $("#subcat_id").append(data);
-                    }
-                  });
-                  
-               
-                  
-        });
-        $("#subcat_id").on('change',function(){
-            let mega=$(this).val();
-            // alert(category);
-            $("#Megcat_id").html("<option value=''>Select Megacategory</option>");
-                  $.ajax({
-                    url:"{{ url('admin/Group/get_megacategory') }}",
-                    type:'post',
-                    data:'category='+mega+'&_token={{ csrf_token() }}',
-                    success:function(data){
-                          $("#Megcat_id").append(data);
-                    }
-                  });
-                  
-               
-                  
-        });
-        $("#Megcat_id").on('change',function(){
-            let Segment=$(this).val();
-            // alert(category);
-            $("#Segment").html("<option value=''>Select Segment</option>");
-                  $.ajax({
-                    url:"{{ url('admin/Group/get_Segment') }}",
-                    type:'post',
-                    data:'category='+Segment+'&_token={{ csrf_token() }}',
-                    success:function(data){
-                          $("#Segment").append(data);
-                    }
-                  });
-                  
-               
-                  
-        });
-        
-        $("#Segment").on('change',function(){
-            let SubSegment=$(this).val();
+    $(document).ready(function(){
+        $("#cat_id").on('change',function(){
+                var category=$(this).val();
+                // alert(category);
+                $("#subcat_id").html("<option value=''>Select Subcategory</option>");
+                    $.ajax({
+                        url:"{{ url('admin/SubGroup/get_subcategory') }}",
+                        type:'post',
+                        data:'category='+category+'&_token={{ csrf_token() }}',
+                        success:function(data){
+                              $("#subcat_id").append(data);
+                        }
+                      });
+                      
+                   
+                      
+            });
+            $("#subcat_id").on('change',function(){
+                let mega=$(this).val();
+                // alert(category);
+                $("#Megcat_id").html("<option value=''>Select Megacategory</option>");
+                      $.ajax({
+                        url:"{{ url('admin/SubGroup/get_megacategory') }}",
+                        type:'post',
+                        data:'category='+mega+'&_token={{ csrf_token() }}',
+                        success:function(data){
+                              $("#Megcat_id").append(data);
+                        }
+                      });
+                      
+                   
+                      
+            });
+            $("#Megcat_id").on('change',function(){
+                let Segment=$(this).val();
+                // alert(category);
+                $("#Segment").html("<option value=''>Select Segment</option>");
+                      $.ajax({
+                        url:"{{ url('admin/SubGroup/get_Segment') }}",
+                        type:'post',
+                        data:'category='+Segment+'&_token={{ csrf_token() }}',
+                        success:function(data){
+                              $("#Segment").append(data);
+                        }
+                      });
+                      
+                   
+                      
+            });
+            
+            $("#Segment").on('change',function(){
+                let SubSegment=$(this).val();
+                //  alert(SubSegment);
+                $("#SubSegment").html("<option value=''>Select Sub Segment</option>");
+                      $.ajax({
+                        url:"{{ url('admin/SubGroup/get_SubSegment') }}",
+                        type:'post',
+                        data:'category='+SubSegment+'&_token={{ csrf_token() }}',
+                        success:function(data){
+                              $("#SubSegment").append(data);
+                        }
+                      });
+                      
+                   
+                      
+            });
+            
+            $("#SubSegment").on('change',function(){
+            let Group=$(this).val();
             //  alert(SubSegment);
-            $("#SubSegment").html("<option value=''>Select Sub Segment</option>");
+            $("#Group").html("<option value=''>Select Group </option>");
                   $.ajax({
-                    url:"{{ url('admin/Group/get_SubSegment') }}",
+                    url:"{{ url('admin/SubGroup/get_Group') }}",
                     type:'post',
-                    data:'category='+SubSegment+'&_token={{ csrf_token() }}',
+                    data:'category='+Group+'&_token={{ csrf_token() }}',
                     success:function(data){
-                          $("#SubSegment").append(data);
+                          $("#Group").append(data);
                     }
                   });
-                  
+                
                
                   
         });
-
-    });
-</script>
+    
+        });
+    </script>

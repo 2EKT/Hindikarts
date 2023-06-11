@@ -81,7 +81,7 @@
             <!-- tittle heading -->
             <h3 class="tittle-w3l text-center mb-lg-5 mb-sm-4 mb-3">
                 <span>O</span>ur
-                <span>N</span>ew
+                {{-- <span>N</span>ew --}}
                 <span>P</span>roducts
             </h3>
             <!-- //tittle heading -->
@@ -106,7 +106,7 @@
                         ?>
                         <!-- first section -->
                         <div class="product-sec1 px-sm-4 px-3 py-sm-5  py-3 mb-4">
-                            <h3 class="heading-tittle text-center font-italic">New Brand Product</h3>
+                            <h3 class="heading-tittle text-center font-italic">New Product</h3>
                             <div class="row">
                                 @foreach ($product as $data)
                                     <div class="col-md-4 product-men mt-5">

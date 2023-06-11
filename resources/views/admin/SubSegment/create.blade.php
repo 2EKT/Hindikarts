@@ -37,7 +37,7 @@
                         </div><!-- end card header -->
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{ url('/admin/megacategory') }}" method="POST" enctype="multipart/form-data">
+                                <form action="{{ url('/admin/SubSegment') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                 <div class="row gy-4">
                                    
@@ -65,8 +65,24 @@
                                     </div>
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
-                                            <label for="placeholderInput" class="form-label">Sub Segemnt Name*</label>
-                                            <input type="text" class="form-control" name="megacategory" placeholder="SubSegemnt Name" required>
+                                            <label for="placeholderInput" class="form-label">Metacategory Name*</label>
+                                            <select class="form-control" name="megacategory" id="Megcat_id" required>
+                                                <option value="">Select Megacategory</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-md-6">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">SegmentName*</label>
+                                            <select class="form-control" name="Segment" id="Segment" required>
+                                                <option value="">Select Segment</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-md-6">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">Sub Segment Name*</label>
+                                            <input type="text" class="form-control" name="SubSegment" placeholder="Sub Segment Name" required>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-md-6">
@@ -107,12 +123,47 @@
             // alert(category);
             $("#subcat_id").html("<option value=''>Select Subcategory</option>");
                 $.ajax({
-                    url:"{{ url('admin/get_subcategory') }}",
+                    url:"{{ url('admin/SubSegment/get_subcategory') }}",
                     type:'post',
                     data:'category='+category+'&_token={{ csrf_token() }}',
                     success:function(data){
                           $("#subcat_id").append(data);
                     }
                   });
-        })
+                  
+               
+                  
+        });
+        $("#subcat_id").on('change',function(){
+            let mega=$(this).val();
+            // alert(category);
+            $("#Megcat_id").html("<option value=''>Select Megacategory</option>");
+                  $.ajax({
+                    url:"{{ url('admin/SubSegment/get_megacategory') }}",
+                    type:'post',
+                    data:'category='+mega+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#Megcat_id").append(data);
+                    }
+                  });
+                  
+               
+                  
+        });
+        $("#Megcat_id").on('change',function(){
+            let Segment=$(this).val();
+            // alert(category);
+            $("#Segment").html("<option value=''>Select Segment</option>");
+                  $.ajax({
+                    url:"{{ url('admin/SubSegment/get_Segment') }}",
+                    type:'post',
+                    data:'category='+Segment+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#Segment").append(data);
+                    }
+                  });
+                  
+               
+                  
+        });
 </script>

@@ -10,7 +10,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header align-items-center d-flex">
-    <h4 class="card-title mb-0 flex-grow-1">Update Segment</h4>
+                            <h4 class="card-title mb-0 flex-grow-1">Create Sub Group</h4>
     @if(session()->has('success'))
         <div class="alert alert-secondary alert-dismissible alert-solid alert-label-icon fade show" role="alert">
             <i class="ri-check-double-line label-icon"></i><strong>Success</strong> - {{ session()->get('success') }}
@@ -37,20 +37,20 @@
                         </div><!-- end card header -->
                         <div class="card-body">
                             <div class="live-preview">
-                                <form action="{{url('/admin/Segment/'.$Segment->id)}}" method="POST" enctype="multipart/form-data">
-                                    {{ method_field('PATCH') }}
+                                <form action="{{ url('/admin/SubGroup') }}" method="POST" enctype="multipart/form-data">
                                     @csrf
                                 <div class="row gy-4">
+                                   
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
                                             <label for="placeholderInput" class="form-label">Category Name*</label>
                                             <select class="form-control" name="cat_id" id="cat_id" required>
                                                 <option value="">Select Category</option>
                                                 @php
-                                                $cat_row=DB::table('categories')->get();
+                                                $row=DB::table('categories')->get();
                                                 @endphp
-                                                @foreach ($cat_row as $cat_details)
-                                                <option value="{{ $cat_details->id }}" {{ $Segment->cat_id==$cat_details->id?'selected':'' }}>{{ $cat_details->category }}</option>
+                                                @foreach ($row as $details)
+                                                <option value="{{ $details->id }}">{{ $details->category }}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -59,51 +59,64 @@
                                         <div>
                                             <label for="placeholderInput" class="form-label">Subcategory Name*</label>
                                             <select class="form-control" name="subcat_id" id="subcat_id" required>
-                                                @php
-                                                $subcategory_row=DB::table('subcategories')->where('id','=',$Segment->subcat_id)->get();
-                                                @endphp
-                                                @foreach ($subcategory_row as $subcategory_details)
-                                                <option value="{{ $subcategory_details->id }}" {{ $Segment->subcat_id==$subcategory_details->id?'selected':'' }}>{{ $subcategory_details->subcategory }}</option>
-                                                @endforeach
+                                                <option value="">Select Subcategory</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
-                                            <label for="placeholderInput" class="form-label">Megacategory Name*</label>
+                                            <label for="placeholderInput" class="form-label">Metacategory Name*</label>
                                             <select class="form-control" name="megacategory" id="Megcat_id" required>
-                                                @php
-                                                $megacategory_row=DB::table('megacategories')->where('id','=',$Segment->megacategory_id)->get();
-                                                @endphp
-                                                @foreach ($megacategory_row as $megacategory_row_details)
-                                                <option value="{{ $megacategory_row_details->id }}" {{ $Segment->megacategory_id==$megacategory_row_details->id?'selected':'' }}>{{ $megacategory_row_details->megacategory}}</option>
-                                                @endforeach
+                                                <option value="">Select Megacategory</option>
                                             </select>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
                                             <label for="placeholderInput" class="form-label">Segment Name*</label>
-                                            <input type="text" class="form-control" name="Segment" placeholder="Segment Name" value="{{ $Segment->Segment }}" required>
+                                            <select class="form-control" name="Segment" id="Segment" required>
+                                                <option value="">Select Segment</option>
+                                            </select>
                                         </div>
                                     </div>
                                     <div class="col-xxl-3 col-md-6">
                                         <div>
-                                            <label for="placeholderInput" class="form-label">Image</label>
-                                            <input type="file" class="form-control" name="image">
-                                            <input type="hidden" class="form-control" name="previous_image" value="{{ $Segment->image }}">
+                                            <label for="placeholderInput" class="form-label">Sub Segment Name*</label>
+                                            <select class="form-control" name="SubSegment" id="SubSegment" required>
+                                                <option value="">Select Sub Segment</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-md-6">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">Group Name*</label>
+                                            <select class="form-control" name="Group" id="Group" required>
+                                                <option value="">Select Group</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-md-6">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">Sub Group Name*</label>
+                                            <input type="text" class="form-control" name="SubGroup" placeholder="Sub Group Name" required>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-md-6">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">Image*</label>
+                                            <input type="file" class="form-control" name="image" required>
                                             <span style="color:red;">Max image size 1000kb</span>
                                         </div>
                                     </div>
                                     
-                                    </div>
-                                    <div class="row">
-                                        <div class="col-xxl-3 col-md-6 pt-4">
-                                            <div class="form-floating">
-                                                <button type="submit" class="btn btn-success">Submit</button>
-                                            </div>
+                                </div>
+                                <div class="row">
+                                    <div class="col-xxl-3 col-md-6 pt-4">
+                                        <div class="form-floating">
+                                            <button type="submit" class="btn btn-success">Submit</button>
                                         </div>
                                     </div>
+                                </div>
                             </form>
                             </div>
                             
@@ -126,7 +139,7 @@
             // alert(category);
             $("#subcat_id").html("<option value=''>Select Subcategory</option>");
                 $.ajax({
-                    url:"{{ url('admin/Segment/get_subcategory') }}",
+                    url:"{{ url('admin/SubGroup/get_subcategory') }}",
                     type:'post',
                     data:'category='+category+'&_token={{ csrf_token() }}',
                     success:function(data){
@@ -138,18 +151,66 @@
                   
         });
         $("#subcat_id").on('change',function(){
-            let category=$(this).val();
+            let mega=$(this).val();
             // alert(category);
             $("#Megcat_id").html("<option value=''>Select Megacategory</option>");
                   $.ajax({
-                    url:"{{ url('admin/Segment/get_megacategory') }}",
+                    url:"{{ url('admin/SubGroup/get_megacategory') }}",
                     type:'post',
-                    data:'category='+category+'&_token={{ csrf_token() }}',
+                    data:'category='+mega+'&_token={{ csrf_token() }}',
                     success:function(data){
                           $("#Megcat_id").append(data);
                     }
                   });
                   
+               
+                  
+        });
+        $("#Megcat_id").on('change',function(){
+            let Segment=$(this).val();
+            // alert(category);
+            $("#Segment").html("<option value=''>Select Segment</option>");
+                  $.ajax({
+                    url:"{{ url('admin/SubGroup/get_Segment') }}",
+                    type:'post',
+                    data:'category='+Segment+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#Segment").append(data);
+                    }
+                  });
+                  
+               
+                  
+        });
+        
+        $("#Segment").on('change',function(){
+            let SubSegment=$(this).val();
+            //  alert(SubSegment);
+            $("#SubSegment").html("<option value=''>Select Sub Segment</option>");
+                  $.ajax({
+                    url:"{{ url('admin/SubGroup/get_SubSegment') }}",
+                    type:'post',
+                    data:'category='+SubSegment+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#SubSegment").append(data);
+                    }
+                  });
+                });
+
+
+                  $("#SubSegment").on('change',function(){
+            let Group=$(this).val();
+            //  alert(SubSegment);
+            $("#Group").html("<option value=''>Select Group </option>");
+                  $.ajax({
+                    url:"{{ url('admin/SubGroup/get_Group') }}",
+                    type:'post',
+                    data:'category='+Group+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#Group").append(data);
+                    }
+                  });
+                
                
                   
         });

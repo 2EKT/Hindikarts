@@ -13,9 +13,10 @@ $user =Auth::guard('web')->user();
 @endphp
         <div class="checkout-left">
             <div class="address_form_agile mt-sm-5 mt-4">
-                <h4 class="mb-sm-4 mb-3">Add a new Details</h4>
+                <h4 class="mb-sm-4 mb-3">Confirm your Details</h4>
                 <form action="payment.html" method="post" class="creditly-card-form agileinfo_form">
                     <div class="creditly-wrapper wthree, w3_agileits_wrapper">
+                        @csrf
                         <div class="information-wrapper">
                             <div class="first-row">
                                 <div class="controls form-group">
@@ -59,12 +60,12 @@ $user =Auth::guard('web')->user();
                                     </select>
                                 </div>
                             </div>
-                            <button class="submit check_out btn">Delivery to this Address</button>
+                            {{-- <button class="submit check_out btn">Delivery to this Address</button> --}}
                         </div>
                     </div>
                 </form>
                 <div class="checkout-right-basket">
-                    <a href="payment.html">Buy Now
+                    <a href="#" class="order">Buy Now
                         <span class="far fa-hand-point-right"></span>
                     </a>
                 </div>

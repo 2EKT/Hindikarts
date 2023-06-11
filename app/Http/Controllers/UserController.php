@@ -75,7 +75,7 @@ class UserController extends Controller
         // $user->active_status = $request->active_status;
 
         if ($user->save()) {
-            return redirect('/shoping')->with('success', 'Inserted Successfully');
+            return redirect('/shoping')->with('success', 'Register Successfully');
         } else {
             return redirect('/shoping')->with('error', 'Something Went Wrong');
         }
@@ -146,11 +146,14 @@ class UserController extends Controller
             'password' => 'required|min:6',
         ]);
         // $request->only('email','password');
-        if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password])) {
+    //     $remember = (boolean) $request->remember ? true : false;
+    //    var_dump($remember ) ;
+        // exit();
+        if (Auth::guard('web')->attempt(['email' => $request->email, 'password' => $request->password],$request->remember)) {
             return redirect('/shoping')->with('success', 'Login Sucessfully');
         } else {
 
-            return redirect('/shoping')->with('error', 'Invalid Details');
+            return redirect('/shoping')->with('error', 'Login details are  invalid ');
         }
     }
     public function logout()
@@ -197,7 +200,7 @@ class UserController extends Controller
             return response()->json(['ok'=>'Add Cart Successfully']);
         }else{
             
-            return response()->json(['ok'=>'Already Added to  Cart ']);
+            return response()->json(['error'=>'Already Added to  Cart ']);
          
         }
 
@@ -214,5 +217,61 @@ class UserController extends Controller
     //     // if()
     //    $cart = DB::table('order_items')->insert($val);
        return response()->json(['ok'=>'Buy Successfully']);
+    }
+    public function getcategory(Request $request){
+       $id = $request->id;
+       $products = DB::table('products')->where('cat_id',$id)->get();
+    //    $products= Compact('products');
+    $data=[];
+    foreach ($products as  $product) {
+        $data[]=[
+ "title" => $product->title,
+ "price" => $product->market_price
+        ];
+    }
+
+        return response()->json(['status' => true, 'message' => 'Success','data'=> $data]);
+    }
+    public function ProductSerach(Request $request){
+        // dd( $request->all());
+         ;
+         $DB = '';
+
+       $DB=  DB::table('products')->where('title' ,'like',$request->Search )->get();
+    //    if(count($DB)==0){
+
+    //    }
+    //    dd($DB);
+    //    exit();
+     return view('Shoping_Store.Search_Product',Compact('DB'));
+    }
+    public function Profile_Update(Request $request)
+    {
+    //    dd( $request->all());
+    $this->validate($request, [
+        'name' => 'required',
+        'number' => 'required|digits:10',
+        'email' => 'required'
+    ]);
+    if($request->password !=null){
+        $this->validate($request, [
+            'password' => 'same:Confrimpassword',
+            'Confrimpassword' => 'required',
+        ]);
+        $pass =  Hash::make($request->password);
+        $password = [
+            'password'=>  $pass
+        ];
+        DB::table('users')->where('id',Auth::guard('web')->user()->id)->update($password);
+    }
+    $data = [
+'name' => $request->name,
+'email' => $request->email,
+'phone' => $request->number,
+    ];
+    
+    DB::table('users')->where('id',Auth::guard('web')->user()->id)->update($data);
+    // echo "Every okey";
+    return back()->with('success', 'Profile Update');
     }
 }

@@ -34,6 +34,10 @@
                                         <th>Category</th>
                                         <th>Subcategory</th>
                                         <th>Megacategory</th>
+                                        {{-- <th>Segment</th>
+                                        <th>SubSegment</th>
+                                        <th>Group</th>
+                                        <th>SubGroup</th> --}}
                                         <th>Title</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
@@ -48,6 +52,10 @@
                                             $cat_row=DB::table('categories')->where('id','=',$details->cat_id)->first();
                                             $subcat_row=DB::table('subcategories')->where('id','=',$details->subcat_id)->first();
                                             $megacat_row=DB::table('megacategories')->where('id','=',$details->megacat_id)->first();
+                                            // $Segment_row=DB::table('segments')->where('id','=',$details->Segment_id)->first();
+                                            // $SubSegment_row=DB::table('sub_segments')->where('id','=',$details->SubSegment_id)->first();
+                                            // $Group_row=DB::table('groups')->where('id','=',$details->Group_id)->first();
+                                            // $SubGroup_row=DB::table('sub_groups')->where('id','=',$details->SubGroup_id)->first();
                                         @endphp
                                         <tr>
                                             <td>{{$loop->iteration }}</td>
@@ -55,6 +63,10 @@
                                             <td>{{$cat_row->category}}</td>
                                             <td>{{$subcat_row->subcategory}}</td>
                                             <td>{{$megacat_row->megacategory}}</td>
+                                            {{-- <td>{{$Segment_row->Segment}}</td>
+                                            <td>{{$SubSegment_row->SegmentSub}}</td>
+                                            <td>{{$Group_row->Group}}</td>
+                                            <td>{{ $SubGroup_row->Sub_Group}}</td> --}}
                                             <td>{{$details->title}}</td>
                                             <td><a href="{{url('/merchant/product/'.$details->id.'/edit')}}"><i data-feather="edit"></i></a></td>
                                             <td><i data-feather="archive" onclick="delete_row({{$details->id}})"></i></td>

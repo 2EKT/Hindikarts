@@ -80,7 +80,12 @@ $page_name=$path[4];
                     </a>
                 </li> 
 
-                
+                <li class="nav-item">
+                    <a class="nav-link {{$page_name=='payment'?'active':''}}" href="{{ url('/admin/payment') }}">
+                        <i class="fa fa-money" aria-hidden="true"></i> <span data-key="t-dashboards">Offline Payment </span>
+                    </a>
+                </li> 
+
 
                 <li class="nav-item">
                     <a class="nav-link menu-link" href="#sidebarApps" data-bs-toggle="collapse" role="button" aria-expanded="false" aria-controls="sidebarApps">

@@ -197,7 +197,7 @@
                 </form> --}}
                 <div class="checkout-right-basket">
                     @if($Amount>0)
-                    <a href="{{url('/Checkout'.$Amount)}}">Go Check Out
+                    <a href="{{url('/Checkout/'.$Amount)}}">Go Check Out
                         <span class="far fa-hand-point-right"></span>
                     </a>
                     @endif
@@ -279,8 +279,23 @@
                 },
                 // dataType: "dataType",
                 success: function (response) {
-                    location.reload();
-                    alert(response.ok)
+                    // location.reload();
+                    // alert(response.ok)
+                   let msg = response.ok
+                   Swal.fire({
+//   position: 'top-end',
+  icon: 'success',
+  title: msg,
+  showConfirmButton: 'Okey',
+//   timer: 1500
+}).then((result) => {
+    if (result.isConfirmed) {
+    // Swal.fire('Saved!', '', 'success')
+    location.reload();
+  }
+})
+
+
                 }
             });
             });

@@ -76,6 +76,38 @@
                                     </div>
                                     <div class="col-xxl-3 col-md-4">
                                         <div>
+                                            <label for="placeholderInput" class="form-label">Segment Name*</label>
+                                            <select class="form-control" name="Segment" id="Segment" required>
+                                                <option value="">Select Segment</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                     <div class="col-xxl-3 col-md-4">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">Sub Segment Name*</label>
+                                            <select class="form-control" name="SubSegment" id="SubSegment" required>
+                                                <option value="">Select Sub Segment</option>
+                                            </select>
+                                        </div>
+                                    </div> 
+                                      <div class="col-xxl-3 col-md-4">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">Group Name*</label>
+                                            <select class="form-control" name="Group" id="Group" required>
+                                                <option value="">Select Group</option>
+                                            </select>
+                                        </div>
+                                    </div> 
+                                    <div class="col-xxl-3 col-md-4">
+                                        <div>
+                                            <label for="placeholderInput" class="form-label">Sub Group Name*</label>
+                                            <select class="form-control" name="SubGroup" id="SubGroup" required>
+                                                <option value="">Select  Sub Group</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    <div class="col-xxl-3 col-md-4">
+                                        <div>
                                             <label for="placeholderInput" class="form-label">Shop Name*</label>
                                             <select class="form-control" name="shop_id" id="shop_id" required>
                                                 <option value="">Select Shop</option>
@@ -250,7 +282,76 @@
                           $("#megacat_id").append(data);
                     }
                   });
+
+
+                 
+
+
     })
+    $("#megacat_id").on('change',function(){
+            let Segment=$(this).val();
+            // alert(category);
+            $("#Segment").html("<option value=''>Select Segment</option>");
+                  $.ajax({
+                    url:"{{ url('merchant/get_Segment') }}",
+                    type:'post',
+                    data:'category='+Segment+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#Segment").append(data);
+                    }
+                  });
+                  
+               
+                  
+        });
+
+                  $("#Segment").on('change',function(){
+            let SubSegment=$(this).val();
+            //  alert(SubSegment);
+            $("#SubSegment").html("<option value=''>Select Sub Segment</option>");
+                  $.ajax({
+                    url:"{{ url('merchant/get_SubSegment') }}",
+                    type:'post',
+                    data:'category='+SubSegment+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#SubSegment").append(data);
+                    }
+                  });
+                });
+
+
+                  $("#SubSegment").on('change',function(){
+            let Group=$(this).val();
+            //  alert(SubSegment);
+            $("#Group").html("<option value=''>Select Group </option>");
+                  $.ajax({
+                    url:"{{ url('merchant/get_Group') }}",
+                    type:'post',
+                    data:'category='+Group+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#Group").append(data);
+                    }
+                  });
+                
+               
+                  
+        });
+        $("#Group").on('change',function(){
+            let Group=$(this).val();
+            //   alert(Group);
+            $("#SubGroup").html("<option value=''>Select  Sub Group </option>");
+                  $.ajax({
+                    url:"{{ url('merchant/get_SubGroup') }}",
+                    type:'post',
+                    data:'category='+Group+'&_token={{ csrf_token() }}',
+                    success:function(data){
+                          $("#SubGroup").append(data);
+                    }
+                  });
+                
+               
+                  
+        });
 
     $("#addbtn").on('click',function(){
         $("#addsection").append('<div class="row my-4"><div class="col-xxl-3 col-md-3"><label for="placeholderInput" class="form-label">Attribute Value</label><input type="text" class="form-control" name="attr_value[]"  placeholder="eg. XL/ XXL / 50g / 100kg"></div><div class="col-xxl-3 col-md-3"><label for="placeholderInput" class="form-label">Market Price</label><input type="number" step="any" class="form-control" name="market_price[]"  placeholder="Enter MRP"></div><div class="col-xxl-3 col-md-3"><label for="placeholderInput" class="form-label">Sale Price</label><input type="number" step="any" class="form-control" name="sale_price[]"  placeholder="Enter Sale Price"></div><div class="col-xxl-2 col-md-2"><label for="placeholderInput" class="form-label">Stock</label><input type="number" step="any" class="form-control" name="stock[]"  placeholder="Enter Stock"></div><div class="col-xxl-1 col-md-1"><label for="placeholderInput" class="form-label">Remove</label><button type="button" class="btn btn-danger removebtn">-</button></div></div>');

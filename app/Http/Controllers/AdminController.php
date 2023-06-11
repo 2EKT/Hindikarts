@@ -30,7 +30,7 @@ class AdminController extends Controller
     public function index()
     {
         if (!Auth::guard('admin')->check()) {
-        return view('admin.index');
+            return view('admin.index');
         } else {
             return redirect('/admin/dashboard');
         }
@@ -39,7 +39,55 @@ class AdminController extends Controller
     {
         return view('admin.business_details.view');
     }
+  public  function payment_record(Request $request)  {
+    // dd($request->all());
+       $amount= $request->amount;
+        $result  = 'Update Sucessfully ';
+        // $error  = '';
+        if(DB::table('merchants')->where('email',$request->Email)->exists() ){
+       $Db=   DB::table('merchants')->where('email',$request->Email)->first()->wallet_balance ;
+       $sum = $Db+$amount;
+       DB::table('merchants')->where('email',$request->Email)->update(['wallet_balance' => $sum]);
+    //    $sum =;
 
+        }elseif(DB::table('zonepartners')->where('email',$request->Email)->exists() ){
+            $Db  =   DB::table('zonepartners')->where('email',$request->Email)->first()->wallet_balance;
+            $sum = $Db+$amount;
+            DB::table('zonepartners')->where('email',$request->Email)->update(['wallet_balance
+            ' => $sum]);
+        }elseif(DB::table('employees')->where('email',$request->Email)->exists() ){
+            $Db = DB::table('employees')->where('email',$request->Email)->first()->wallet_balance;
+            $sum = $Db+$amount;
+            DB::table('employees')->where('email',$request->Email)->update(['wallet_balance'
+            => $sum]);
+        }elseif(DB::table('blockpartners')->where('email',$request->Email)->exists() ){
+            $Db = DB::table('blockpartners')->where('email',$request->Email)->first()->wallet_balance;
+            $sum = $Db+$amount;
+            DB::table('blockpartners')->where('email',$request->Email)->update(['wallet_balance
+            ' => $sum]);
+
+        }elseif(DB::table('districtpartners')->where('email',$request->Email)->exists() ){
+            $Db=DB::table('districtpartners')->where('email',$request->Email)->first()->wallet_balance;
+            $sum = $Db+$amount;
+            DB::table('districtpartners')->where('email',$request->Email)->update(['wallet_balance
+            ' => $sum]);
+        }
+        else{
+                       $result = "No user Found ";
+                    // $result = [];
+        }
+        // dd($result);
+        // return back()->with('data',compact('result'));
+        return back()->with( ['result' => $result] );
+        // return $result;
+        
+
+   }
+    public function payment()
+    {
+         $result= '';
+        return view('admin.Ofline_payment',compact('result'));
+    }
     public function razorpay()
     {
         return view('admin.razorpay');
@@ -156,14 +204,13 @@ class AdminController extends Controller
 
     public function admin_login(Request $request)
     {
-       
 
-            if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
-                return redirect('/admin/dashboard');
-            } else {
-                return redirect('/admin')->withInput()->with('error', 'Invalid Credentials');
-            }
-   
+
+        if (Auth::guard('admin')->attempt(['email' => $request->email, 'password' => $request->password])) {
+            return redirect('/admin/dashboard');
+        } else {
+            return redirect('/admin')->withInput()->with('error', 'Invalid Credentials');
+        }
     }
     public function dashboard()
     {
@@ -196,8 +243,8 @@ class AdminController extends Controller
     {
 
         // exit();
-     $admin_id = Auth::guard('admin')->user()->id;
-    // exit();
+        $admin_id = Auth::guard('admin')->user()->id;
+        // exit();
         //$admin_id = 2;
         // $employee_id = 
         $from_date = $request->from_date;
@@ -262,7 +309,7 @@ class AdminController extends Controller
                 $total_Sum_Merchant_collection = $total_Sum_Merchant_collection + $merchant_collection;
                 $total_Sum_subscription_collection = $total_Sum_subscription_collection + $subscription_collection;
                 $total_Sum_adverise_collection = $total_Sum_adverise_collection + $adverise_collection;
-                
+
                 // $total_collection = $merchant_collection +  $subscription_collection + $adverise_collection + $other_collection;
                 $total_collection =  $total_Sum_Merchant_collection + $total_Sum_subscription_collection + $total_Sum_adverise_collection + $other_collection;
 
@@ -270,9 +317,9 @@ class AdminController extends Controller
                 $gst = ($total_collection > 0) ? ($total_collection * 18) / 100 : 0;
                 $net_collection = $total_collection - $gst;
                 $EMPLOYEE_COM = ($net_collection  > 0) ? ($net_collection * 25) / 100 : 0;
-                $Block_COM =($net_collection  > 0) ? ($net_collection * 12) / 100 : 0;
-                $Distric_COM =($net_collection  > 0) ? ($net_collection * 5) / 100 : 0;
-                $Zone_COM =($net_collection  > 0) ? ($net_collection * 2) / 100 : 0;
+                $Block_COM = ($net_collection  > 0) ? ($net_collection * 12) / 100 : 0;
+                $Distric_COM = ($net_collection  > 0) ? ($net_collection * 5) / 100 : 0;
+                $Zone_COM = ($net_collection  > 0) ? ($net_collection * 2) / 100 : 0;
 
 
 
@@ -323,7 +370,7 @@ class AdminController extends Controller
         $Grand_net_collection = 0;
         // $G_EMPLOYEE_COMs = 0;
 
-        $Total_other_collection =0;
+        $Total_other_collection = 0;
         foreach ($merchant_total  as $tables) {
 
             $merchant_collection_Total = DB::table('merchant_payments')
@@ -357,10 +404,10 @@ class AdminController extends Controller
             $Grand_gsts = ($total_collection_Grand > 0) ? ($total_collection_Grand * 18) / 100 : 0;
             $Grand_net_collection =   $total_collection_Grand - $Grand_gsts;
             $G_EMPLOYEE_COMs = ($Grand_net_collection > 0) ? ($Grand_net_collection * 25) / 100 : 0;
-            $G_BLOCk_COM = ($Grand_net_collection > 0) ? ($Grand_net_collection *12) / 100 : 0;
-            $G_distric_COM = ($Grand_net_collection > 0) ? ($Grand_net_collection *5) / 100 : 0;
-            $GZoneCOM = ($Grand_net_collection > 0) ? ($Grand_net_collection *2) / 100 : 0;
-            $Total_other_collection +=  $other_collection ;
+            $G_BLOCk_COM = ($Grand_net_collection > 0) ? ($Grand_net_collection * 12) / 100 : 0;
+            $G_distric_COM = ($Grand_net_collection > 0) ? ($Grand_net_collection * 5) / 100 : 0;
+            $GZoneCOM = ($Grand_net_collection > 0) ? ($Grand_net_collection * 2) / 100 : 0;
+            $Total_other_collection +=  $other_collection;
             if ($Grand_net_collection > 0) {
                 $total_earnings = $this->twoDecimalPoint(($Grand_net_collection * 25) / 100);
             }
@@ -379,7 +426,7 @@ class AdminController extends Controller
             $G_EMPLOYEE_COMs =  $this->twoDecimalPoint($G_EMPLOYEE_COMs);
             $G_BLOCk_COM =  $this->twoDecimalPoint($G_BLOCk_COM);
             $G_distric_COM =  $this->twoDecimalPoint($G_distric_COM);
-            $GZoneCOM =  $this->twoDecimalPoint( $GZoneCOM);
+            $GZoneCOM =  $this->twoDecimalPoint($GZoneCOM);
 
             // echo $merchant_collection . "<br>";
 
@@ -398,10 +445,10 @@ class AdminController extends Controller
                 'total_gst_by_merchants' => $Grand_gsts,
                 'total_collection_by_EMPLOYEE_COM' =>  $G_EMPLOYEE_COMs,
                 'total_net_collection_by_merchants' =>  $Grand_net_collection,
-                'total_collection_by_BlOCK_COM' =>$G_BLOCk_COM,
+                'total_collection_by_BlOCK_COM' => $G_BLOCk_COM,
                 'total_collection_by_Distric_COM' => $G_distric_COM,
                 'total_collection_by_Zone_COM' =>  $GZoneCOM,
-             ],
+            ],
             "total_earnings" => $total_earnings,
             "bonus" => $bonus,
             "wallet_balance" => $wallet_balance,
@@ -415,6 +462,4 @@ class AdminController extends Controller
     {
         return number_format((float)$number, 2, '.', '');
     }
-
-
 }

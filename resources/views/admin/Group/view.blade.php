@@ -9,7 +9,7 @@
                 <div class="col-lg-12">
                     <div class="card">
                         <div class="card-header">
-                            <h5 class="card-title mb-0">Group List <a href="{{ url('/admin/megacategory/create') }}"><button class="btn btn-primary">Add+</button></a></h5>
+                            <h5 class="card-title mb-0">Group List <a href="{{ url('/admin/Group/create') }}"><button class="btn btn-primary">Add+</button></a></h5>
                         
                         </div>
                         @if(session()->has('success'))
@@ -34,28 +34,37 @@
                                         <th>Category</th>
                                         <th>Subcategory</th>
                                         <th>Megacategory</th>
+                                        <th>Segment</th>
+                                        <th>SubSegment</th>
+                                        <th>Group</th>
                                         <th>Edit</th>
                                         <th>Delete</th>
                                     </tr>
                                 </thead>
                                 <tbody>
                                     @php
-                                    $row=DB::table('megacategories')->get();
+                                    $row=DB::table('groups')->get();
                                     @endphp
                                     @foreach ($row as $details)
                                         @php
                                             $cat_row=DB::table('categories')->where('id','=',$details->cat_id)->first();
                                             $subcat_row=DB::table('subcategories')->where('id','=',$details->subcat_id)->first();
+                                            $megacat_row=DB::table('megacategories')->where('id','=',$details->megacategory_id)->first();
+                                            $SubSegment_row=DB::table('segments')->where('id','=',$details->Segment_id)->first();
+                                            $Sub_row=DB::table('sub_segments')->where('id','=',$details->SegmentSub_id)->first();
                                         @endphp
                                         <tr>
                                             <td>{{$loop->iteration }}</td>
-                                            <td><img src="{{ asset('category_image/'.$details->image) }}" alt="" style="height: 60px;width: 70px;"></td>
+                                            <td><img src="{{ asset('Segment_image/'.$details->image) }}" alt="" style="height: 60px;width: 70px;"></td>
                                             <td>{{$cat_row->category}}</td>
                                             <td>{{$subcat_row->subcategory}}</td>
-                                            <td>{{$details->megacategory}}</td>
-                                            <td><a href="{{url('/admin/megacategory/'.$details->id.'/edit')}}"><i data-feather="edit"></i></a></td>
+                                            <td>{{$megacat_row->megacategory}}</td>
+                                            <td>{{ $SubSegment_row->Segment}}</td>
+                                            <td>{{$Sub_row->SegmentSub}}</td>
+                                            <td>{{$details->Group}}</td>
+                                            <td><a href="{{url('/admin/Group/'.$details->id.'/edit')}}"><i data-feather="edit"></i></a></td>
                                             <td><i data-feather="archive" onclick="delete_row({{$details->id}})"></i></td>
-                                            <form action="{{url('/admin/megacategory/'.$details->id)}}" method="post" id="delete_submit{{$details->id}}" style="display:none;">
+                                            <form action="{{url('/admin/Group/'.$details->id)}}" method="post" id="delete_submit{{$details->id}}" style="display:none;">
                                                     {{ method_field('DELETE') }}
                                                         {{csrf_field()}}
                                             </form>
